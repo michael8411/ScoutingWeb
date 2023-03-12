@@ -1,0 +1,16 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+</script>
+
+<template>
+  <header>
+
+  </header>
+
+  <main>
+
+  </main>
+</template>
+
+<style scoped></style>
