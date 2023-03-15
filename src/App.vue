@@ -1,16 +1,120 @@
-<script setup lang="ts">
+<script setup >
 import { ref } from 'vue'
+import optionsJSON from './data/options.json'
+import teamsJSON from './data/teams.json'
+import Dropdown from './components/Dropdown.vue'
+import TextField from './components/TextField.vue'
+import Login from './Login.vue'
+
+var map = ref(new Map());
+const alphabet = "[0-9]"
+const numbers = "[A-Za-z]"
+
+const optionList = ref(optionsJSON)
+
+function refresh() {
+  window.location.href = window.location.href;
+}
+
+
+
+function onChange(event, key) {
+  map.value.set(key, event.target.value)
+  //print elements in map
+  for (let [key, value] of map.value) {
+    console.log(key + ' = ' + value);
+  }
+  console.log("--------------------")
+}
+
+
+
 
 </script>
 
-<template>
-  <header>
-
+<template id="mainTemplate">
+  <header id="top">
+    <h1 id="Title">Comment Scouting</h1>
   </header>
 
   <main>
+    <div id="scoutTextBox">
+      <TextField id="ScoutInfo" :pattern="alphabet" label="Scout's Initials:" :maxlength=2 />
+      <TextField id="TeamsInfo" :pattern="numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
+    </div>
 
+
+    <section id="comments">
+      <div id="commentNames">
+        <div class="commentName" v-for="(option, index) in optionList">
+          <label>{{ option.commentName }}</label>
+        </div>
+      </div>
+      <div id="dropdowns">
+        <Dropdown v-for="(option, index) in optionList" :key="index" :value="option.commentName" :options="option"
+          @change="onChange($event, option.commentName)" />
+      </div>
+    </section>
   </main>
 </template>
 
-<style scoped></style>
+<style>
+:root {
+  --grid-gap: 20px;
+}
+
+
+#top {}
+
+#Title {
+  font-family: 'Lemon/Milk', 'Futura PT';
+  margin: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: middle;
+  vertical-align: middle;
+  width: 300px;
+  top: 0;
+}
+
+#comments {
+  display: flex;
+  flex-direction: row;
+  align-content: middle;
+}
+
+#commentNames {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: calc(var(--grid-gap) + 13px);
+}
+
+#dropdowns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--grid-gap);
+}
+
+#scoutTextBox {
+  display: flex;
+  flex-direction: row;
+  align-content: middle;
+  justify-content: center;
+  color: var(--color-text);
+  top: -100px;
+  /* remove this */
+}
+
+.commentName {
+  margin: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  vertical-align: middle;
+  width: fit-content;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+}
+</style>

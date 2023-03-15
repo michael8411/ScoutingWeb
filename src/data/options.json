@@ -1,0 +1,46 @@
+[
+    {
+        "commentName": "Play Defense",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "commentName": "Driver Skill",
+        "choices": [
+            "N/A",
+            "Bad",
+            "Average",
+            "Amazing"
+        ]
+    },
+    {
+        "commentName": "Defending Level",
+        "choices": [
+            "N/A",
+            "Bad",
+            "Average",
+            "Amazing"
+        ]
+    },
+    {
+        "commentName": "Links",
+        "choices": [
+            "N/A",
+            "1",
+            "2",
+            "3"
+        ]
+    },
+    {
+        "commentName": "Game Piece Specialization",
+        "choices": [
+            "N/A",
+            "Cubes",
+            "Cones",
+            "Both"
+        ]
+    }
+]
