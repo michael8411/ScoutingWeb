@@ -83,13 +83,9 @@ function isLetter(char) {
 
 function handleInputWithConstraints(newValue) {
     if (props.constraints === "Initials") {
-        const textFieldName = props.label.replace(":", "").trim();
-        if(!isLetter(newValue.slice(-1)))
-        {
-            inputText.value = newValue.slice(0, -1); 
-            submissionMap.value.set(textFieldName, "");
-        }
-        if (newValue.length === 2) {
+        const textFieldName = props.label.replace(": ", "");
+
+        if (newValue.length === 2 && isLetter(newValue.slice(-1))) {
             submissionMap.value.set(textFieldName, newValue);
             validationStatusMessage = validMessage;
         } else {
