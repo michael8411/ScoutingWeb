@@ -1,4 +1,5 @@
 <template>
+
   <header id="top">
     <h1 id="Title">Comment Scouting</h1>
   </header>
@@ -72,6 +73,13 @@ function onChange(event, key) {
   --grid-gap: 20px;
 }
 
+main{
+  display: flex;
+  flex-direction: column;
+  align-content: middle;
+}
+
+
 #Title {
   font-family: 'Lemon/Milk', 'Futura PT';
   margin: auto;
@@ -104,9 +112,10 @@ function onChange(event, key) {
 
 #scoutTextBox {
   display: flex;
-  flex-direction: row;
-  align-content: middle;
+  flex-direction: column;
+  align-content: space-between;
   justify-content: center;
+
   color: var(--color-text);
   top: -100px;
 }

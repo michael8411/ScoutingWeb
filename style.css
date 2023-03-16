@@ -35,9 +35,7 @@ body {
 }
 
 form {
-  display: grid;
-  position: relative;
-  grid-gap: 2rem;
+
 }
 
 input {
