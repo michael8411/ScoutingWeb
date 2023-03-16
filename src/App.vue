@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, watch } from 'vue';
 import optionsJSON from './data/options.json';
 import teamsJSON from './data/teams.json';
 import TextField from './components/TextField.vue';
@@ -38,6 +38,18 @@ const numbers = "[A-Za-z]";
 
 const optionList = ref(optionsJSON);
 
+(async () => {
+  while (
+    submissionMap.value.get("Scout's Initials") !== '' ||
+    submissionMap.value.get("Team Number") !== ''
+  ) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  optionList.value.forEach(option => {
+    submissionMap.value.set(option.commentName, '');
+  });
+})();
+
 function refresh() {
   window.location.href = window.location.href;
 }
@@ -50,6 +62,7 @@ function onChange(event, key) {
   }
   console.log("--------------------");
 }
+
 </script>
 
 
