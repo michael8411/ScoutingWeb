@@ -123,10 +123,8 @@ watch(inputText, (newValue) => {
   
 <style scoped>
 .maxChar {
-    position: absolute;
+    position: relative;
     font-size: 11px;
-    top: 20px;
-    left: 130px;
 }
 
 #textField {
