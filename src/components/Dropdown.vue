@@ -1,10 +1,3 @@
-<script setup >
-import { ref } from 'vue'
-
-const { JSON_FILE } = defineProps(['options'])
-
-</script>
-
 <template>
     <div id="dropDownDiv">
         <!-- <label id="commentName"> {{ options.commentName }}</label> -->
@@ -16,6 +9,14 @@ const { JSON_FILE } = defineProps(['options'])
         </select>
     </div>
 </template>
+
+<script setup >
+import { ref } from 'vue'
+
+const { JSON_FILE } = defineProps(['options'])
+
+</script>
+
 
 <style scoped>
 #dropDownDiv {

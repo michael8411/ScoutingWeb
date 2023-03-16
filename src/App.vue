@@ -1,48 +1,13 @@
-<script setup >
-import { ref } from 'vue'
-import optionsJSON from './data/options.json'
-import teamsJSON from './data/teams.json'
-import Dropdown from './components/Dropdown.vue'
-import TextField from './components/TextField.vue'
-import Login from './Login.vue'
-
-var map = ref(new Map());
-const alphabet = "[0-9]"
-const numbers = "[A-Za-z]"
-
-const optionList = ref(optionsJSON)
-
-function refresh() {
-  window.location.href = window.location.href;
-}
-
-
-
-function onChange(event, key) {
-  map.value.set(key, event.target.value)
-  //print elements in map
-  for (let [key, value] of map.value) {
-    console.log(key + ' = ' + value);
-  }
-  console.log("--------------------")
-}
-
-
-
-
-</script>
-
-<template id="mainTemplate">
+<template>
   <header id="top">
     <h1 id="Title">Comment Scouting</h1>
   </header>
 
   <main>
     <div id="scoutTextBox">
-      <TextField id="ScoutInfo" :pattern="alphabet" label="Scout's Initials:" :maxlength=2 />
-      <TextField id="TeamsInfo" :pattern="numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
+      <TextField id="ScoutInfo" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
+      <TextField id="TeamsInfo" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
     </div>
-
 
     <section id="comments">
       <div id="commentNames">
@@ -58,13 +23,41 @@ function onChange(event, key) {
   </main>
 </template>
 
+<script setup>
+import { ref, provide } from 'vue';
+import optionsJSON from './data/options.json';
+import teamsJSON from './data/teams.json';
+import TextField from './components/TextField.vue';
+import Dropdown from './components/Dropdown.vue';
+
+const submissionMap = ref(new Map());
+provide('submissionMap', submissionMap);
+
+const alphabet = "[0-9]";
+const numbers = "[A-Za-z]";
+
+const optionList = ref(optionsJSON);
+
+function refresh() {
+  window.location.href = window.location.href;
+}
+
+function onChange(event, key) {
+  submissionMap.value.set(key, event.target.value);
+
+  for (let [key, value] of submissionMap.value) {
+    console.log(key + ' = ' + value);
+  }
+  console.log("--------------------");
+}
+</script>
+
+
+
 <style>
 :root {
   --grid-gap: 20px;
 }
-
-
-#top {}
 
 #Title {
   font-family: 'Lemon/Milk', 'Futura PT';
@@ -103,7 +96,6 @@ function onChange(event, key) {
   justify-content: center;
   color: var(--color-text);
   top: -100px;
-  /* remove this */
 }
 
 .commentName {
@@ -118,3 +110,4 @@ function onChange(event, key) {
   padding-left: 0.5em;
 }
 </style>
+
