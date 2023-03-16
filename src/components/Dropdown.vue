@@ -54,7 +54,7 @@ select {
     margin: 2px;
     box-sizing: border-box;
     padding: 0.65em 2.5em 0.55em 0.75em;
-    border-radius: 2px;
+    border-radius: 5px;
     background-color: var(--vt-c-black-soft);
     background-image: url("../assets/select-arrow.png"),
         /*linear-gradient(var(--baseFg), var(--baseFg)),*/

@@ -1,20 +1,14 @@
-
-
 <template>
-    <!-- THIS WHOLE FILE GOT REWRITEN -->
-
     <label>{{ props.label }}</label>
     <form>
         <input onkeypress="return event.keyCode != 13" :pattern="props.pattern" :title="props.title" id="textField"
             :maxlength="props.maxlength" :filterFile="props.filterFile" v-model="text" />
         <label class="maxChar" :id="props.label"><span :style="{ color: warning === validMessage ? 'green' : 'red' }">{{
             warning
-        }}</span>{{
-    text.length }}/{{ props.maxlength }}
-        </label>
+        }}</span>{{ text.length }}/{{ props.maxlength }}</label>
     </form>
 </template>
-  
+
 <script setup>
 import { ref, watch, defineProps } from "vue";
 const invalidMessage = "Invalid " + props.label.replace(":", "")
@@ -28,10 +22,16 @@ const props = defineProps({
     filterFile: { type: String },
     maxlength: { type: Number, default: 100 },
     pattern: { type: String, default: "" },
-    title: { type: String, default: "Invalid Input" },
+    title: { type: String, default: "" },
 });
 
+function isNumber(char) {
+    return /\d/.test(char);
+}
 
+function isLetter(char) {
+    return /[a-zA-Z]/.test(char);
+}
 
 watch(text, (newValue) => {
     const maxLength = props.maxlength;
@@ -46,25 +46,43 @@ watch(text, (newValue) => {
     }
 
     if (filterFile) {
-        let invalidNumber = true;
+        let invalidInput = true;
 
         for (let i = 0; i < filterFile.length; i++) {
             if (filterFile[i] === newValue) {
-                invalidNumber = false;
+                invalidInput = false;
                 document.getElementById(labelId).style.color = "var(--color-text)";
                 warning = validMessage;
-                console.log(warning)
                 break;
             }
         }
 
-        if (invalidNumber) {
+        if (invalidInput) {
             warning = newValue.length === 0 ? "" : invalidMessage;
         }
     }
+    if (props.label === "Scout's Initials:")
+    {
+        if ((isLetter(newValue.slice(-1)))) {    
+        }else
+        {
+            warning = newValue.length === 0 ? "" : invalidMessage;
+            text.value = newValue.slice(0, -1); 
+        }
+    }
+    if (props.label === "Team Number: ")
+    {
+        if ((isNumber(newValue.slice(-1)))) {    
+        }else
+        {
+            warning = newValue.length === 0 ? "" : invalidMessage;
+            text.value = newValue.slice(0, -1); 
+        }
+    }
+        
 });
 </script>
-  
+
 <style scoped>
 .maxChar {
     position: absolute;
