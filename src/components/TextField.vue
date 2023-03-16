@@ -3,9 +3,10 @@
     <form>
         <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
             :filterFile="props.filterFile" v-model="inputText" />
-        <label class="maxChar" :id="props.label"><span :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
-            validationStatusMessage
-        }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
+        <label class="maxChar" :id="props.label"><span
+                :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
+                    validationStatusMessage
+                }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
     </form>
 </template>
   
@@ -64,7 +65,7 @@ function handleFilterFile(newValue) {
                 document.getElementById(props.label).style.color = "var(--color-text)";
                 submissionMap.value.set(textFieldName, newValue);
                 validationStatusMessage = validMessage;
-            }  
+            }
         }
         if (invalidInput) {
             submissionMap.value.set(textFieldName, "");
@@ -83,9 +84,11 @@ function isLetter(char) {
 
 function handleInputWithConstraints(newValue) {
     if (props.constraints === "Initials") {
-        const textFieldName = props.label.replace(": ", "");
-
-        if (newValue.length === 2 && isLetter(newValue.slice(-1))) {
+        const textFieldName = props.label.replace(":", "").trim();
+        if (!isLetter(newValue.slice(-1))) {
+            inputText.value = newValue.slice(0, -1);
+        }
+        if (newValue.length === 2) {
             submissionMap.value.set(textFieldName, newValue);
             validationStatusMessage = validMessage;
         } else {
