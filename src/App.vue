@@ -4,20 +4,20 @@
   </header>
 
   <main>
-    <div id="scoutTextBox">
+    <div id="textboxes">
       <TextField id="ScoutInfo" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
       <TextField id="TeamsInfo" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
     </div>
 
-    <section id="comments">
-      <div id="commentNames">
-        <div class="commentName" v-for="(option, index) in optionList">
-          <label>{{ option.commentName }}</label>
+    <section id="options">
+      <div id="optionLabels">
+        <div class="optionLabel" v-for="(option, index) in optionList" :key="index">
+          <label>{{ option.optionLabel }}</label>
         </div>
       </div>
       <div id="dropdowns">
-        <Dropdown v-for="(option, index) in optionList" :key="index" :value="option.commentName" :options="option"
-          @change="onChange($event, option.commentName)" />
+        <Dropdown v-for="(option, index) in optionList" :key="index" :value="option.optionLabel" :options="option"
+          @change="onChange($event, option.optionLabel)" />
       </div>
     </section>
   </main>
@@ -30,42 +30,31 @@ import teamsJSON from './data/teams.json';
 import TextField from './components/TextField.vue';
 import Dropdown from './components/Dropdown.vue';
 
+// Initialize the submission map and make it available to child components
 const submissionMap = ref(new Map());
 provide('submissionMap', submissionMap);
 
-const alphabet = "[0-9]";
-const numbers = "[A-Za-z]";
-
 const optionList = ref(optionsJSON);
 
-(async () => {
-  while (
-    submissionMap.value.get("Scout's Initials") !== '' ||
-    submissionMap.value.get("Team Number") !== ''
-  ) {
-    await new Promise(resolve => setTimeout(resolve, 100));
+watch(
+  () => [submissionMap.value.get("Scout's Initials"), submissionMap.value.get("Team Number")],
+  async ([scoutInitials, teamNumber]) => {
+    if (scoutInitials !== '' || teamNumber !== '') {
+      optionList.value.forEach(option => {
+        submissionMap.value.set(option.optionLabel, '');
+      });
+    }
   }
-  optionList.value.forEach(option => {
-    submissionMap.value.set(option.commentName, '');
-  });
-})();
-
-function refresh() {
-  window.location.href = window.location.href;
-}
+);
 
 function onChange(event, key) {
   submissionMap.value.set(key, event.target.value);
-
   for (let [key, value] of submissionMap.value) {
     console.log(key + ' = ' + value);
   }
   console.log("--------------------");
 }
-
 </script>
-
-
 
 <style>
 :root {
@@ -84,13 +73,13 @@ function onChange(event, key) {
   top: 0;
 }
 
-#comments {
+#options {
   display: flex;
   flex-direction: row;
   align-content: middle;
 }
 
-#commentNames {
+#optionLabels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: calc(var(--grid-gap) + 13px);
@@ -102,7 +91,7 @@ function onChange(event, key) {
   gap: var(--grid-gap);
 }
 
-#scoutTextBox {
+#textboxes {
   display: flex;
   flex-direction: row;
   align-content: middle;
@@ -111,7 +100,7 @@ function onChange(event, key) {
   top: -100px;
 }
 
-.commentName {
+.optionLabel {
   margin: auto;
   white-space: nowrap;
   overflow: hidden;

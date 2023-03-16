@@ -11,7 +11,7 @@
 </template>
   
 <script setup>
-import { ref, watch, defineProps, inject, defineComponent } from "vue";
+import { ref, watch, inject, defineComponent } from "vue";
 
 
 

@@ -1,24 +1,25 @@
 <template>
-    <div id="dropDownDiv">
-        <!-- <label id="commentName"> {{ options.commentName }}</label> -->
-        <select>
-            <option value="Defualt" disabled selected>Select your option</option>
-            <option v-for="choices in options.choices" :value="option">
-                {{ choices }}
+    <div class="dropdown-container">
+        <select class="custom-dropdown">
+            <option value="Default" disabled selected>Select your option</option>
+            <option v-for="choice in options.choices" :value="choice">
+                {{ choice }}
             </option>
         </select>
     </div>
 </template>
+  
+<script setup>
+import { defineProps } from 'vue';
 
-<script setup >
-import { ref } from 'vue'
-const { JSON_FILE } = defineProps(['options'])
+const props = defineProps({
+    options: Object,
+});
 
 </script>
-
-
+  
 <style scoped>
-#dropDownDiv {
+.dropdown-container {
     display: flex;
     width: fit-content;
     overflow: hidden;
@@ -26,20 +27,7 @@ const { JSON_FILE } = defineProps(['options'])
     justify-content: space-evenly;
 }
 
-#commentName {
-    margin: auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: right;
-    vertical-align: text-bottom;
-    width: fit-content;
-    padding-right: 0.5em;
-    padding-left: 0.5em;
-}
-
-select {
-
+.custom-dropdown {
     float: left;
     align-content: flex-end;
     font: 400 12px/1.3;
@@ -57,7 +45,6 @@ select {
     border-radius: 5px;
     background-color: var(--vt-c-black-soft);
     background-image: url("../assets/select-arrow.png"),
-        /*linear-gradient(var(--baseFg), var(--baseFg)),*/
         linear-gradient(-135deg, transparent 50%, var(--accentBg) 50%),
         linear-gradient(-225deg, transparent 50%, var(--accentBg) 50%),
         linear-gradient(var(--accentBg) 42%, var(--accentFg) 42%);
@@ -66,16 +53,14 @@ select {
     background-position: right 20px center, right bottom, right bottom, right bottom;
 }
 
-select:hover {
-
+.custom-dropdown:hover {
     background-image: linear-gradient(var(--accentFg), var(--accentFg)),
         linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
         linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
         linear-gradient(var(--accentFg) 42%, var(--accentBg) 42%);
 }
 
-select:active {
-
+.custom-dropdown:active {
     background-image: linear-gradient(var(--accentFg), var(--accentFg)),
         linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
         linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
