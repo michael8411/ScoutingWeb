@@ -59,13 +59,12 @@ function onChange(event, key) {
 
 <style>
 :root {
-  --grid-gap: 20px;
+  --option-grid-gap: 20px;
 }
 
 main{
-  display: flex;
-  flex-direction: column;
-  align-content: middle;
+  display: grid;
+  gap: 30px;
 }
 
 
@@ -90,13 +89,13 @@ main{
 #optionLabels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: calc(var(--grid-gap) + 13px);
+  gap: calc(var(--option-grid-gap) + 13px);
 }
 
 #dropdowns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: var(--grid-gap);
+  gap: var(--option-grid-gap);
 }
 
 #textboxes {
