@@ -1,10 +1,13 @@
 <template>
-
   <header id="top">
-    <h1 id="Title">Comment Scouting</h1>
+    <img id="logo" src="./assets/images/cryptonite_logo.png">
+    <h1 id="title">Comment Scouting</h1>
   </header>
 
   <main>
+    <div id="loginPage">
+      <Login />
+    </div>
     <div id="textboxes">
       <TextField id="ScoutInfo" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
       <TextField id="TeamsInfo" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
@@ -30,12 +33,17 @@ import optionsJSON from './data/options.json';
 import teamsJSON from './data/teams.json';
 import TextField from './components/TextField.vue';
 import Dropdown from './components/Dropdown.vue';
-
+import Login from './Login.vue';
 // Initialize the submission map and make it available to child components
 const submissionMap = ref(new Map());
 provide('submissionMap', submissionMap);
 
 const optionList = ref(optionsJSON);
+function refresh() {
+  window.location.href = window.location.href;
+}
+
+setTimeout(refresh, 10000);
 
 watch(
   () => [submissionMap.value.get("Scout's Initials"), submissionMap.value.get("Team Number")],
@@ -62,20 +70,33 @@ function onChange(event, key) {
   --option-grid-gap: 20px;
 }
 
-main{
+#logo {
+  max-width: 20%;
+  height: 20%;
+  margin-right: auto;
+}
+
+#top {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  overflow: auto;
+}
+
+main {
   display: grid;
+  margin: auto;
   gap: 30px;
 }
 
 
-#Title {
+#title {
   font-family: 'Lemon/Milk', 'Futura PT';
   margin: auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: middle;
-  vertical-align: middle;
+  text-align: center;
   width: 300px;
   top: 0;
 }
