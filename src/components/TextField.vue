@@ -6,27 +6,28 @@
         <label class="maxChar" :id="props.label"><span
                 :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
                     validationStatusMessage
-                }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
+                }}</span>{{  inputText.length }}/{{ props.maxlength }}</label>
     </form>
 </template>
   
 <script setup>
 import { ref, watch, inject, defineComponent } from "vue";
 
-
-
 const props = defineProps({
     label: { type: String, required: true },
     filterFile: { type: String },
     maxlength: { type: Number, default: 100 },
     title: { type: String, default: "" },
-    constraints: { type: String, default: "" }
+    constraints: { type: String, default: "" },
+    initialValue: {type: String, default: "", required: false}
 });
+
+
 
 const invalidMessage = `Invalid ${props.label.replace(":", "").trim()}`;
 const validMessage = `Valid ${props.label.replace(":", "").trim()}`;
 
-const inputText = ref("");
+const inputText = ref(props.initialValue);
 
 const submissionMap = inject("submissionMap");
 submissionMap.value.set(props.label.replace(":", "").trim(), "");
@@ -37,7 +38,6 @@ let validationStatusMessage = "";
 function getValidationMessage(newValue) {
     return newValue.length === 0 ? "" : invalidMessage;
 }
-
 
 
 function handleMaxLength(newValue) {
@@ -104,6 +104,14 @@ function handleInputWithConstraints(newValue) {
         }
     }
 
+    if(props.constraints === "Text")
+    {
+        if (!isLetter(newValue.slice(-1) )) {
+            validationStatusMessage = getValidationMessage(newValue)
+            inputText.value = newValue.slice(0, -1);
+        }               
+    }
+
     if (props.constraints === "Numbers") {
         if (!isNumber(newValue.slice(-1))) {
             validationStatusMessage = getValidationMessage(newValue)
@@ -112,6 +120,8 @@ function handleInputWithConstraints(newValue) {
     }
 
 }
+
+
 
 watch(inputText, (newValue) => {
     handleMaxLength(newValue);
@@ -124,7 +134,15 @@ watch(inputText, (newValue) => {
 <style scoped>
 .maxChar {
     position: relative;
+
     font-size: 11px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: center;
 }
 
 #textField {
