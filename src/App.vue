@@ -6,9 +6,15 @@
 
   <main>
     <div class="textboxes">
+      <div>
       <TextField class="info" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
+      </div>
+      <div>
       <TextField class="info" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
+      </div>
+      <div>
       <TextField class="info" constraints="Numbers" label="Match Number:" :maxlength=2  initialValue = "1" />
+      </div>
     </div>
 
     <section id="options">
@@ -23,8 +29,11 @@
       </div>
     </section>
     <div class="textboxes">
+      <div>
       <TextField class="info" constraints="Text" label="Additional Comments:" :maxlength=200 />
+      </div>
     </div>
+    <Button></Button>
   </main>
 </template>
 
@@ -35,6 +44,7 @@ import teamsJSON from './data/teams.json';
 import TextField from './components/TextField.vue';
 import Dropdown from './components/Dropdown.vue';
 import Login from './Login.vue';
+import Button from './components/Button.vue'
 // Initialize the submission map and make it available to child components
 const submissionMap = ref(new Map());
 provide('submissionMap', submissionMap);
@@ -119,16 +129,12 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: var(--option-grid-gap);
+  width: fit-content;
 }
 
-#textboxes {
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
-  justify-content: center;
-
-  color: var(--color-text);
-  top: -100px;
+.textboxes {
+  display: grid;
+  gap: 20px;
 }
 
 .optionLabel {

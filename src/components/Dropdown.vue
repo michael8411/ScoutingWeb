@@ -1,11 +1,14 @@
 <template>
-    <div class="dropdown-container">
+    <div class="custom-select">
         <select class="custom-dropdown">
-            <option value="Default" disabled selected>Select your option</option>
+            <option class="option" value="Default" disabled selected>Select your option</option>
             <option v-for="choice in options.choices" :value="choice">
                 {{ choice }}
             </option>
         </select>
+      <div class="select-arrow">
+        <img src="../assets/images/select-arrow.png" >
+      </div>
     </div>
 </template>
   
@@ -19,54 +22,61 @@ const props = defineProps({
 </script>
   
 <style scoped>
-.dropdown-container {
+.custom-select {
     display: flex;
     width: fit-content;
-    overflow: hidden;
-    flex-direction: row;
-    justify-content: space-evenly;
+  position: relative;
+  display: inline-block;
+  border-radius: 4px;
+  border: 1px solid #232b2b;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 10px;
+  height: 40px;
+  background-color: var(--vt-c-black-soft);
 }
 
-.custom-dropdown {
-    float: left;
-    align-content: flex-end;
-    font: 400 12px/1.3;
-    -webkit-appearance: none;
-    appearance: none;
-    color: var(--baseFg);
-    border: none;
-    line-height: 1;
-    outline: 0;
-    width: 150px;
-    height: 33px;
-    margin: 2px;
-    box-sizing: border-box;
-    padding: 0.65em 2.5em 0.55em 0.75em;
-    border-radius: 5px;
-    background-color: var(--vt-c-black-soft);
-    background-image: url("../assets/images/select-arrow.png"),
-        linear-gradient(-135deg, transparent 50%, var(--accentBg) 50%),
-        linear-gradient(-225deg, transparent 50%, var(--accentBg) 50%),
-        linear-gradient(var(--accentBg) 42%, var(--accentFg) 42%);
-    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-    background-size: 1px 100%, 20px 22px, 20px 22px, 20px 100%;
-    background-position: right 20px center, right bottom, right bottom, right bottom;
+.custom-select select {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding-right: 30px;
+  cursor: pointer;
+  color: var(--baseFg);
+  text-overflow: ellipsis;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-justify: center;
 }
 
-.custom-dropdown:hover {
-    background-image: linear-gradient(var(--accentFg), var(--accentFg)),
-        linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
-        linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
-        linear-gradient(var(--accentFg) 42%, var(--accentBg) 42%);
+.custom-select select::-ms-expand {
+  display: none;
 }
 
-.custom-dropdown:active {
-    background-image: linear-gradient(var(--accentFg), var(--accentFg)),
-        linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
-        linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
-        linear-gradient(var(--accentFg) 42%, var(--accentBg) 42%);
-    color: var(--accentBg);
-    border: none;
-    background-color: var(--accentFg);
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select-arrow img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
+}
+
+.custom-select:hover {
+  border-color: var(--accentBg);
+}
+.custom-select select option {
+  background-color: var(--vt-c-black-soft);
+  color: var(--baseFg);
 }
 </style>
