@@ -1,9 +1,11 @@
-<script>
-
+<script setup>
+const props = defineProps({ 
+  label: { type: String, required: false } 
+  });
 </script>
 
 <template>
-<button class="button" role="button">Submit to Database</button>
+<button class="button" role="button">{{props.label}}</button>
 </template>
 
 <style>

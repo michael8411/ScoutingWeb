@@ -33,7 +33,7 @@
       <TextField class="info" constraints="Text" label="Additional Comments:" :maxlength=200 />
       </div>
     </div>
-    <Button></Button>
+    <Button label="Submit to Database"></Button>
   </main>
 </template>
 
@@ -45,6 +45,7 @@ import TextField from './components/TextField.vue';
 import Dropdown from './components/Dropdown.vue';
 import Login from './Login.vue';
 import Button from './components/Button.vue'
+
 // Initialize the submission map and make it available to child components
 const submissionMap = ref(new Map());
 provide('submissionMap', submissionMap);
