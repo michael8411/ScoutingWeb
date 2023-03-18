@@ -10,7 +10,7 @@
 </template>
   
 <script setup>
-import { defineProps } from 'vue';
+
 
 const props = defineProps({
     options: Object,
@@ -44,7 +44,7 @@ const props = defineProps({
     padding: 0.65em 2.5em 0.55em 0.75em;
     border-radius: 5px;
     background-color: var(--vt-c-black-soft);
-    background-image: url("../assets/select-arrow.png"),
+    background-image: url("../assets/images/select-arrow.png"),
         linear-gradient(-135deg, transparent 50%, var(--accentBg) 50%),
         linear-gradient(-225deg, transparent 50%, var(--accentBg) 50%),
         linear-gradient(var(--accentBg) 42%, var(--accentFg) 42%);
