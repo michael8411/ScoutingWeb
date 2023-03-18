@@ -5,12 +5,10 @@
   </header>
 
   <main>
-    <div id="loginPage">
-      <Login />
-    </div>
-    <div id="textboxes">
-      <TextField id="ScoutInfo" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
-      <TextField id="TeamsInfo" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
+    <div class="textboxes">
+      <TextField class="info" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
+      <TextField class="info" constraints="Numbers" :filterFile="teamsJSON.teams" label="Team Number: " :maxlength=5 />
+      <TextField class="info" constraints="Numbers" label="Match Number:" :maxlength=2  initialValue = "1" />
     </div>
 
     <section id="options">
@@ -24,6 +22,9 @@
           @change="onChange($event, option.optionLabel)" />
       </div>
     </section>
+    <div class="textboxes">
+      <TextField class="info" constraints="Text" label="Additional Comments:" :maxlength=200 />
+    </div>
   </main>
 </template>
 
@@ -43,12 +44,12 @@ function refresh() {
   window.location.href = window.location.href;
 }
 
-setTimeout(refresh, 10000);
+setTimeout(refresh, 1000000);
 
 watch(
   () => [submissionMap.value.get("Scout's Initials"), submissionMap.value.get("Team Number")],
   async ([scoutInitials, teamNumber]) => {
-    if (scoutInitials !== '' || teamNumber !== '') {
+    if (scoutInitials == '' || teamNumber == '') {
       optionList.value.forEach(option => {
         submissionMap.value.set(option.optionLabel, '');
       });
@@ -77,18 +78,16 @@ function onChange(event, key) {
 }
 
 #top {
-  display: flex;
-  flex-direction: row;
   width: auto;
-  overflow: auto;
 }
 
 main {
   display: grid;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
   gap: 30px;
 }
-
 
 #title {
   font-family: 'Lemon/Milk', 'Futura PT';
@@ -97,14 +96,17 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  width: 300px;
+  width: auto;
+  height: auto;
   top: 0;
+  font-size: calc(100% + 1.8vw);
 }
 
 #options {
   display: flex;
   flex-direction: row;
-  align-content: middle;
+  align-items: middle;
+  justify-content: center;
 }
 
 #optionLabels {
