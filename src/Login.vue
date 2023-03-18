@@ -1,4 +1,8 @@
 <template>
+    <head>
+        <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    </head>
+
     <div>
         <form action="">
             <div class="Eform-group">
@@ -10,11 +14,11 @@
                     <span aria-hidden="true" class="label__letter" style="--index: 4;">l</span>
                     <span class="sr-only">Email</span>
                 </label>
-                <div class="form-group__input" style = "position:relative; left:18px;">
+                <div class="form-group__input" style="position:relative; left:18px;">
                     <input required type="email" id="email" class="form-input"
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter valid email address"
                         placeholder="Enter valid email address" />
-                    <div class="form-group__error">Enter a valid email address</div>
+                    <div class="form-group__error">YOU FUCKING IDIOT</div>
                 </div>
             </div>
             <div class="Pform-group">
@@ -32,14 +36,18 @@
                 <div class="form-group__input">
                     <input required type="password" id="password" class="form-input" pattern=".{8,}"
                         title="Password must be at least 8 characters long" placeholder="Enter password" />
-                    <div class="form-group__error">Password must be at least 8 characters long</div>
+                    <div class="form-group__error">dumbass, thats not a password</div>
                 </div>
             </div>
             <button type="submit">Submit</button>
         </form>
+        <GoogleLogin :callback="callback" />
     </div>
 </template>
 <script>
+
+
+
 export default {
     name: "EmailForm",
 };
@@ -89,11 +97,17 @@ form {
 }
 
 input {
-    border: 4px solid var(--color);
+
     border-radius: 4px;
     padding: 1rem 2rem;
     font-weight: 400;
     transition: border-color var(--transition);
+    position: relative;
+    border: transparent;
+    background-color: var(--color-background);
+    color: var(--baseFg);
+    border-bottom: 1px solid var(--color-text);
+    left: 5px;
 }
 
 input:focus-visible {
@@ -120,6 +134,7 @@ label {
     transition: color var(--transition);
     color: var(--color);
     font-size: 1.25rem;
+
 }
 
 button {
@@ -130,7 +145,7 @@ button {
     background: var(--disabled);
     font-weight: bold;
     color: var(--gray-5);
-    transition: color var(--transition), background var(--transition);
+    transition: color var(--transition)
 }
 
 
@@ -145,6 +160,7 @@ button {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+
 }
 
 .Eform-group:has(:invalid),
@@ -261,4 +277,5 @@ form:valid [type="submit"] {
             transform: translateX(2%);
         }
     }
-}</style>
+}
+</style>
