@@ -1,48 +1,88 @@
 <template>
-    <label>{{ props.label }}</label>
+    <label>{{ labelId }}</label>
     <form>
         <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
             :filterFile="props.filterFile" v-model="inputText" />
-        <label class="maxChar" :id="props.label"><span
+        <label class="maxChar" :id="labelId"><span
                 :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
                     validationStatusMessage
-                }}</span>{{  inputText.length }}/{{ props.maxlength }}</label>
+                }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
     </form>
 </template>
   
 <script setup>
-import { ref, watch, inject, defineComponent } from "vue";
+import { ref, watch, inject, defineProps } from "vue";
 
 const props = defineProps({
+    class: { type: String, default: "", required: true },
     label: { type: String, required: true },
-    filterFile: { type: String },
-    maxlength: { type: Number, default: 100 },
-    title: { type: String, default: "" },
-    constraints: { type: String, default: "" },
-    initialValue: {type: String, default: "", required: false}
+    filterFile: { type: Array, required: false },
+    maxlength: { type: Number, default: 100, required: false },
+    title: { type: String, default: "", required: false },
+    constraints: { type: String, default: "", required: false },
+    initialValue: { type: String, default: "", required: false }
 });
 
+const labelId = props.label;
 
+const trimmedLabel = labelId.replace(":", "").trim();
+const invalidMessage = `Invalid ${trimmedLabel}   `;
+const validMessage = `Valid ${trimmedLabel}   `;
 
-const invalidMessage = `Invalid ${props.label.replace(":", "").trim()}`;
-const validMessage = `Valid ${props.label.replace(":", "").trim()}`;
 
 const inputText = ref(props.initialValue);
-
 const submissionMap = inject("submissionMap");
-submissionMap.value.set(props.label.replace(":", "").trim(), "");
-
+submissionMap.value.set(trimmedLabel, props.initialValue);
 
 let validationStatusMessage = "";
+
+//make a watch for the submissionMap
 
 function getValidationMessage(newValue) {
     return newValue.length === 0 ? "" : invalidMessage;
 }
 
+function handleKeyPress(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+    }
+}
 
+function handleConstraints(constraints, newValue) {
+  switch (constraints) {
+    case "Initials":
+      if (!/^[a-zA-Z]*$/.test(newValue)) {
+        inputText.value = newValue.slice(0, -1);
+      }
+
+      if (newValue.length === 0) {
+        submissionMap.value.set(trimmedLabel, "");
+        validationStatusMessage = "";
+      } else if (newValue.length < 2) {
+        submissionMap.value.set(trimmedLabel, "");
+        validationStatusMessage = invalidMessage;
+      } else {
+        document.getElementById(labelId).style.color = "var(--color-text)";
+        submissionMap.value.set(trimmedLabel, newValue);
+        validationStatusMessage = validMessage;
+      }
+      break;
+    case "Letters":
+      inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
+      submissionMap.value.set(trimmedLabel, newValue);
+      break;
+    case "Text":
+      inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
+      submissionMap.value.set(trimmedLabel, newValue);
+      break;
+    case "Numbers":
+      inputText.value = newValue.replace(/\D/g, "");
+      submissionMap.value.set(trimmedLabel, newValue);
+      break;
+  }
+}
 function handleMaxLength(newValue) {
     const maxLength = props.maxlength;
-    const labelId = props.label;
 
     if (newValue.length === maxLength) {
         inputText.value = newValue.toUpperCase();
@@ -54,91 +94,35 @@ function handleMaxLength(newValue) {
 
 function handleFilterFile(newValue) {
     const filterFile = props.filterFile;
-    const textFieldName = props.label.replace(":", "").trim();
 
     if (filterFile) {
-        let invalidInput = true;
+        const isValueValid = filterFile.includes(newValue);
 
-        for (let i = 0; i < filterFile.length; i++) {
-            if (filterFile[i] === newValue) {
-                invalidInput = false;
-                document.getElementById(props.label).style.color = "var(--color-text)";
-                submissionMap.value.set(textFieldName, newValue);
-                validationStatusMessage = validMessage;
-            }
-        }
-        if (invalidInput) {
-            submissionMap.value.set(textFieldName, "");
-            validationStatusMessage = getValidationMessage(newValue)
-        }
-    }
-}
-
-function isNumber(char) {
-    return /\d/.test(char);
-}
-
-function isLetter(char) {
-    return /[a-zA-Z]/.test(char);
-}
-
-function handleInputWithConstraints(newValue) {
-    if (props.constraints === "Initials") {
-        const textFieldName = props.label.replace(":", "").trim();
-        if (!isLetter(newValue.slice(-1))) {
-            inputText.value = newValue.slice(0, -1);
-        }
-        if (newValue.length === 2) {
-            submissionMap.value.set(textFieldName, newValue);
+        if (isValueValid) {
+            document.getElementById(labelId).style.color = "var(--color-text)";
+            submissionMap.value.set(trimmedLabel, newValue);
             validationStatusMessage = validMessage;
         } else {
-            submissionMap.value.set(textFieldName, "");
-            validationStatusMessage = getValidationMessage(newValue)
+            submissionMap.value.set(trimmedLabel, "");
+            validationStatusMessage = getValidationMessage(newValue);
         }
     }
-
-    if (props.constraints === "Letters") {
-        if (!isLetter(newValue.slice(-1))) {
-            validationStatusMessage = getValidationMessage(newValue)
-            inputText.value = newValue.slice(0, -1);
-        }
-    }
-
-    if(props.constraints === "Text")
-    {
-        if (!isLetter(newValue.slice(-1) )) {
-            validationStatusMessage = getValidationMessage(newValue)
-            inputText.value = newValue.slice(0, -1);
-        }               
-    }
-
-    if (props.constraints === "Numbers") {
-        if (!isNumber(newValue.slice(-1))) {
-            validationStatusMessage = getValidationMessage(newValue)
-            inputText.value = newValue.slice(0, -1);
-        }
-    }
-
 }
-
-
-
 watch(inputText, (newValue) => {
     handleMaxLength(newValue);
     handleFilterFile(newValue);
-    handleInputWithConstraints(newValue);
+    handleConstraints(props.constraints, newValue);
 });
-
 </script>
-  
+
 <style scoped>
 .maxChar {
     position: relative;
-
+    left : 5px;
     font-size: 11px;
 }
 
-form{
+form {
     display: flex;
     flex-direction: column;
     align-content: space-between;

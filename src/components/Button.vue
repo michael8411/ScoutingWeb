@@ -1,11 +1,13 @@
 <script setup>
-const props = defineProps({ 
-  label: { type: String, required: false } 
-  });
+const props = defineProps({
+  label: { type: String, required: false },
+  href: { type: String, required: false },
+  onClick: { type: Function, required: false }
+});
 </script>
 
 <template>
-<button class="button" role="button">{{props.label}}</button>
+  <button :href="props.href" @click="props.onClick" class="button" role="button">{{ props.label }}</button>
 </template>
 
 <style>
