@@ -4,7 +4,7 @@
     </head>
 
     <div>
-        <form action="">
+        <form action=""  @submit.prevent="submit" >
             <div class="Eform-group">
                 <label for="email" class="form-label">
                     <span aria-hidden="true" class="label__letter" style="--index: 0;">E</span>
@@ -44,15 +44,34 @@
         <GoogleLogin :callback="callback" />
     </div>
 </template>
-<script>
+<script setup>
+// Import the required functions and components
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import GoogleLogin from 'vue3-google-login';
 
+// Set up the router
+const router = useRouter();
 
+// Create the submit method
+const submit = () => {
+  const emailInput = document.querySelector('#email');
+  const passwordInput = document.querySelector('#password');
 
-export default {
-    name: "EmailForm",
+  if (emailInput.checkValidity() && passwordInput.checkValidity()) {
+    router.push('/Scouting');
+  }
 };
 </script>
-  
+
+<script>
+export default {
+  name: 'EmailForm',
+  components: {
+    GoogleLogin,
+  },
+};
+</script>
 <style scoped>
 *,
 *:after,
@@ -225,6 +244,7 @@ form:valid [type="submit"] {
     .Eform-group:has(:valid) label span,
     .Pform-group:has(:valid) label span {
         animation: wave 0.25s calc(var(--index) * 0.05s);
+
     }
 
     .Eform-group:has(:invalid:not(:focus)),
