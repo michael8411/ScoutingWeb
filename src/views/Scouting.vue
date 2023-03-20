@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%; padding: 2%;">
     <header id="top">
       <img id="logo" src="../assets/images/cryptonite_logo.png">
       <h1 id="title">Comment Scouting</h1>
