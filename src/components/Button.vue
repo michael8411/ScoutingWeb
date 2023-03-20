@@ -13,7 +13,7 @@ const props = defineProps({
 <style>
 .button {
   align-items: center;
-  background-color: var(--accentFg);
+  background-color: #009200;
   border: 2px solid #232b2b;
   border-radius: 8px;
   box-sizing: border-box;

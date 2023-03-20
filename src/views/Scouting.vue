@@ -1,10 +1,11 @@
 <template>
+  <div style="height: 100%;">
     <header id="top">
       <img id="logo" src="../assets/images/cryptonite_logo.png">
       <h1 id="title">Comment Scouting</h1>
     </header>
   
-    <main>
+    <main id="comments">
       <div class="textboxes">
         <div>
           <TextField :class="'scouts-initials-textfield'" constraints="Initials" label="Scout's Initials:" :maxlength=2 />
@@ -38,6 +39,7 @@
       </div>
       <Button label="Submit to Database"></Button>
     </main>
+  </div>
   </template>
   
   <script setup>
@@ -90,16 +92,19 @@
     margin-right: auto;
   }
   
+  
   #top {
     width: auto;
   }
   
-  main {
+  #comments {
     display: grid;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     gap: 30px;
+    width: 50%;
+    min-width: fit-content;
   }
   
   #title {

@@ -1,11 +1,12 @@
 @import './base.css';
   #app {
-    align-content: center;
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    padding: 2rem;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
   }
 
 a,

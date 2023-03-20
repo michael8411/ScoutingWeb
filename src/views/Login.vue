@@ -3,46 +3,50 @@
         <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
     </head>
 
-    <div>
-        <form action=""  @submit.prevent="submit" >
-            <div class="Eform-group">
-                <label for="email" class="form-label">
-                    <span aria-hidden="true" class="label__letter" style="--index: 0;">E</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 1;">m</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 2;">a</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 3;">i</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 4;">l</span>
-                    <span class="sr-only">Email</span>
-                </label>
-                <div class="form-group__input" style="position:relative; left:18px;">
-                    <input required type="email" id="email" class="form-input"
-                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter valid email address"
-                        placeholder="Enter valid email address" />
-                    <div class="form-group__error">YOU FUCKING IDIOT</div>
-                </div>
+        <div id="box">
+            <img id="circle_logo" src="../assets/images/624_circle_logo.png">
+            <h1 id="login_title">Login</h1>
+            <div id="auth">
+                <form action=""  @submit.prevent="submit" >
+                    <div class="Eform-group">
+                        <label for="email" class="form-label">
+                            <span aria-hidden="true" class="label__letter" style="--index: 0;">E</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 1;">m</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 2;">a</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 3;">i</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 4;">l</span>
+                            <span class="sr-only">Email</span>
+                        </label>
+                        <div class="form-group__input" style="position:relative; left:18px;">
+                            <input required type="email" id="email" class="form-input"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter email address"
+                                placeholder="Enter email address" />
+                            <div class="form-group__error">Invalid Email</div>
+                        </div>
+                    </div>
+                    <div class="Pform-group">
+                        <label for="password" class="form-label">
+                            <span aria-hidden="true" class="label__letter" style="--index: 0;">P</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 1;">a</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 2;">s</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 3;">s</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 4;">w</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 5;">o</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 6;">r</span>
+                            <span aria-hidden="true" class="label__letter" style="--index: 7;">d</span>
+                            <span class="sr-only">Password</span>
+                        </label>
+                        <div class="form-group__input">
+                            <input required type="password" id="password" class="form-input" pattern=".{8,}"
+                                title="Password must be at least 8 characters long" placeholder="Enter password" />
+                            <div class="form-group__error">Invalid Password</div>
+                        </div>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                <GoogleLogin :callback="callback" />
             </div>
-            <div class="Pform-group">
-                <label for="password" class="form-label">
-                    <span aria-hidden="true" class="label__letter" style="--index: 0;">P</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 1;">a</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 2;">s</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 3;">s</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 4;">w</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 5;">o</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 6;">r</span>
-                    <span aria-hidden="true" class="label__letter" style="--index: 7;">d</span>
-                    <span class="sr-only">Password</span>
-                </label>
-                <div class="form-group__input">
-                    <input required type="password" id="password" class="form-input" pattern=".{8,}"
-                        title="Password must be at least 8 characters long" placeholder="Enter password" />
-                    <div class="form-group__error">dumbass, thats not a password</div>
-                </div>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-        <GoogleLogin :callback="callback" />
-    </div>
+        </div>
 </template>
 <script setup>
 // Import the required functions and components
@@ -59,7 +63,7 @@ const submit = () => {
   const passwordInput = document.querySelector('#password');
 
   if (emailInput.checkValidity() && passwordInput.checkValidity()) {
-    router.push('/Scouting');
+    router.push('/scouting');
   }
 };
 </script>
@@ -72,6 +76,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 *,
 *:after,
@@ -98,15 +103,53 @@ export default {
     color-scheme: none;
 }
 
-body {
-    display: grid;
-    min-height: 100vh;
-    font-family: 'Google Sans', sans-serif, system-ui;
-    place-items: center;
+
+#box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 600px;
+    height: 550px;
+    background-color: var(--vt-c-black-soft);
+    margin: auto;
+    border: 1.5px solid var(--vt-c-green-secondary);
+    box-shadow: 0 4px 8px 0 rgba(0, 255, 0, 0.4), 0 6px 20px 0 rgba(0, 255, 0, 0.3);
+}
+
+#circle_logo{
+    display: flex;
+    position: absolute;
+    overflow: visible;
+    height: 140px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateY(-50px);
+    -webkit-filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary))
+                  drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
+    filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary)) 
+            drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
+}
+
+#login_title{
+    font-family: 'Lemon/Milk', 'Futura PT';
+    white-space: nowrap;
     overflow: hidden;
-    margin: 0;
-    background-color: var(--gray-9);
-    font-size: 1rem;
+    text-overflow: ellipsis;
+    text-align: center;
+    width: auto;
+    height: auto;
+    top: 0;
+    font-size: 55px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+}
+
+#auth{
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 form {
@@ -123,7 +166,7 @@ input {
     transition: border-color var(--transition);
     position: relative;
     border: transparent;
-    background-color: var(--color-background);
+    background-color: transparent;
     color: var(--baseFg);
     border-bottom: 1px solid var(--color-text);
     left: 5px;
@@ -134,7 +177,7 @@ input:focus-visible {
 }
 
 input::placeholder {
-    color: transparent;
+    color: var(--baseFg);
 }
 
 .Eform-group,
@@ -142,10 +185,11 @@ input::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Futura PT';
 }
 
 label {
-    font-family: sans-serif;
+    font-family: 'Futura PT';
     display: flex;
     font-weight: bold;
     padding-right: 1rem;
@@ -164,7 +208,8 @@ button {
     background: var(--disabled);
     font-weight: bold;
     color: var(--gray-5);
-    transition: color var(--transition)
+    transition: color var(--transition);
+    font-family: 'Lemon/Milk'; 
 }
 
 

@@ -9,9 +9,8 @@ console.log(currentPage.value)
 
 <template>
     <div id="app">
-        <p>WORK ON CSS FOR LOGIN PAGE</p>
-        <a v-if = "currentPage == '/Login' " href="/Scouting">Scouting</a>
-        <a v-if = "currentPage == '/Scouting' " href="/Login">Login</a>
+        <a v-if = "currentPage == '/login' " href="/scouting">scouting</a>
+        <a v-if = "currentPage == '/scouting' " href="/login">login</a>
 
     </div>
 </template>
