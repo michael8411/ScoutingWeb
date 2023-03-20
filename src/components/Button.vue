@@ -21,8 +21,9 @@ const props = defineProps({
   cursor: pointer;
   display: flex;
   font-size: 16px;
-  height: 48px;
+  height: 52px;
   justify-content: center;
+  justify-self: center;
   line-height: 24px;
   max-width: 100%;
   padding: 0 25px;

@@ -42,7 +42,7 @@
                             <div class="form-group__error">Invalid Password</div>
                         </div>
                     </div>
-                    <button type="submit">Submit</button>
+                    <Button label="Submit"></Button>
                 </form>
                 <GoogleLogin :callback="callback" />
             </div>
@@ -53,6 +53,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import GoogleLogin from 'vue3-google-login';
+import Button from '../components/Button.vue'
 
 // Set up the router
 const router = useRouter();
@@ -103,7 +104,6 @@ export default {
     color-scheme: none;
 }
 
-
 #box{
     display: flex;
     flex-direction: column;
@@ -114,6 +114,8 @@ export default {
     margin: auto;
     border: 1.5px solid var(--vt-c-green-secondary);
     box-shadow: 0 4px 8px 0 rgba(0, 255, 0, 0.4), 0 6px 20px 0 rgba(0, 255, 0, 0.3);
+    position: relative;
+    z-index: 0;
 }
 
 #circle_logo{
@@ -129,6 +131,10 @@ export default {
                   drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
     filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary)) 
             drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
+}
+
+Button{
+    width: 200px;
 }
 
 #login_title{
@@ -199,20 +205,6 @@ label {
     font-size: 1.25rem;
 
 }
-
-button {
-    padding: 1rem 2rem;
-    border-radius: 4px;
-    border: 0;
-    cursor: pointer;
-    background: var(--disabled);
-    font-weight: bold;
-    color: var(--gray-5);
-    transition: color var(--transition);
-    font-family: 'Lemon/Milk'; 
-}
-
-
 
 .sr-only {
     position: absolute;
