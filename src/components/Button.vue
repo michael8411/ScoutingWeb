@@ -11,6 +11,10 @@ const props = defineProps({
 </template>
 
 <style>
+:root{
+  --button-height: 52px;
+}
+
 .button {
   align-items: center;
   background-color: #009200;
@@ -21,7 +25,7 @@ const props = defineProps({
   cursor: pointer;
   display: flex;
   font-size: 16px;
-  height: 52px;
+  height: var(--button-height);
   justify-content: center;
   justify-self: center;
   line-height: 24px;
@@ -41,7 +45,7 @@ const props = defineProps({
   border-radius: 8px;
   content: "";
   display: block;
-  height: 48px;
+  height: var(--button-height);
   left: 0;
   width: 100%;
   position: absolute;
