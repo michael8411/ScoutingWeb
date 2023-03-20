@@ -3,78 +3,104 @@
         <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
     </head>
 
-        <div id="box">
-            <img id="circle_logo" src="../assets/images/624_circle_logo.png">
-            <h1 id="login_title">Login</h1>
-            <div id="auth">
-                <form action=""  @submit.prevent="submit" >
-                    <div class="Eform-group">
-                        <label for="email" class="form-label">
-                            <span aria-hidden="true" class="label__letter" style="--index: 0;">E</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 1;">m</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 2;">a</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 3;">i</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 4;">l</span>
-                            <span class="sr-only">Email</span>
-                        </label>
-                        <div class="form-group__input" style="position:relative; left:18px;">
-                            <input required type="email" id="email" class="form-input"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter email address"
-                                placeholder="Enter email address" />
-                            <div class="form-group__error">Invalid Email</div>
-                        </div>
+    <div id="box">
+        <img id="circle_logo" src="../assets/images/624_circle_logo.png">
+        <h1 id="login_title">Login</h1>
+        <div id="auth">
+            <form action="" @submit.prevent="signIn">
+                <div class="Eform-group">
+                    <label for="email" class="form-label">
+                        <span aria-hidden="true" class="label__letter" style="--index: 0;">K</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 1;">A</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 2;">T</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 3;">Y</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 4;">&nbsp;</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 5;">I</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 6;">S</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 7;">D</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 8;"> &nbsp;</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 9;">I</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 10;">D</span>
+                        <span class="sr-only">Email</span>
+                    </label>
+                    <div class="form-group__input" style="position:relative; left:18px;">
+                        <input required type="email" id="email" class="form-input"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter email address"
+                            placeholder="Enter email address" v-model="email" />
+                        <div class="form-group__error">Invalid Email</div>
                     </div>
-                    <div class="Pform-group">
-                        <label for="password" class="form-label">
-                            <span aria-hidden="true" class="label__letter" style="--index: 0;">P</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 1;">a</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 2;">s</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 3;">s</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 4;">w</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 5;">o</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 6;">r</span>
-                            <span aria-hidden="true" class="label__letter" style="--index: 7;">d</span>
-                            <span class="sr-only">Password</span>
-                        </label>
-                        <div class="form-group__input">
-                            <input required type="password" id="password" class="form-input" pattern=".{8,}"
-                                title="Password must be at least 8 characters long" placeholder="Enter password" />
-                            <div class="form-group__error">Invalid Password</div>
-                        </div>
+                </div>
+                <div class="Pform-group">
+                    <label for="password" class="form-label">
+                        <span aria-hidden="true" class="label__letter" style="--index: 0;">P</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 1;">a</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 2;">s</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 3;">s</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 4;">w</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 5;">o</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 6;">r</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 7;">d</span>
+                        <span class="sr-only">Password</span>
+                    </label>
+                    <div class="form-group__input">
+                        <input required type="password" id="password" class="form-input" pattern=".{8,}"
+                            title="Password must be at least 8 characters long" placeholder="Enter password"
+                            v-model="password" />
+                        <div class="form-group__error">Invalid Password</div>
+                        <div v-if="error">{{ error }}</div>
                     </div>
-                    <Button label="Submit"></Button>
-                </form>
-                <GoogleLogin :callback="callback" />
-            </div>
+                </div>
+                <Button label="Submit"></Button>
+            </form>
+            <GoogleLogin :callback="callback" />
         </div>
+    </div>
 </template>
 <script setup>
 // Import the required functions and components
 import { ref } from 'vue';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from 'vue-router';
-import GoogleLogin from 'vue3-google-login';
 import Button from '../components/Button.vue'
 
 // Set up the router
 const router = useRouter();
 
-// Create the submit method
-const submit = () => {
-  const emailInput = document.querySelector('#email');
-  const passwordInput = document.querySelector('#password');
+const password = ref('');
+const email = ref('');
 
-  if (emailInput.checkValidity() && passwordInput.checkValidity()) {
-    router.push('/scouting');
-  }
-};
-</script>
+const signIn = () => {
+    const emailInput = document.querySelector('#email');
+    const passwordInput = document.querySelector('#password');
 
-<script>
-export default {
-  name: 'EmailForm',
-  components: {
-    GoogleLogin,
-  },
+    if (emailInput.checkValidity() && passwordInput.checkValidity()) {
+        const auth = getAuth();
+        const userEmail = email.value;
+        
+        createUserWithEmailAndPassword(auth, userEmail, password.value)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log("User created and signed in:", user);
+
+                router.push('/scouting');
+            })
+            .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                    signInWithEmailAndPassword(auth, userEmail, password.value)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            console.log("Signed in as " + user.email);
+
+                            router.push('/scouting');
+                        })
+                        .catch((error) => {
+                            console.error("Sign in failed: ", error);
+                        });
+                } else {
+                    console.error("Failed to create user:", error);
+                }
+            });
+    }
 };
 </script>
 
@@ -104,7 +130,7 @@ export default {
     color-scheme: none;
 }
 
-#box{
+#box {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,7 +144,7 @@ export default {
     z-index: 0;
 }
 
-#circle_logo{
+#circle_logo {
     display: flex;
     position: absolute;
     overflow: visible;
@@ -127,17 +153,15 @@ export default {
     margin-left: auto;
     margin-right: auto;
     transform: translateY(-50px);
-    -webkit-filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary))
-                  drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
-    filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary)) 
-            drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
+    -webkit-filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary)) drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
+    filter: drop-shadow(2px 2px 0 var(--vt-c-green-secondary)) drop-shadow(-2px -2px 0 var(--vt-c-green-secondary));
 }
 
-Button{
+Button {
     width: 200px;
 }
 
-#login_title{
+#login_title {
     font-family: 'Lemon/Milk', 'Futura PT';
     white-space: nowrap;
     overflow: hidden;
@@ -152,7 +176,7 @@ Button{
     margin-top: auto;
 }
 
-#auth{
+#auth {
     margin-bottom: auto;
     margin-left: auto;
     margin-right: auto;

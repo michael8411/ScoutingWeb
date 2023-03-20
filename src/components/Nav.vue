@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const currentPage = computed(() => route.path);
-console.log(currentPage.value)
 </script>
 
 <template>
