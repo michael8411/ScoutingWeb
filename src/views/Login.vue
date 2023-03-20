@@ -18,15 +18,15 @@
                         <span aria-hidden="true" class="label__letter" style="--index: 5;">I</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 6;">S</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 7;">D</span>
-                        <span aria-hidden="true" class="label__letter" style="--index: 8;"> &nbsp;</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 8;">&nbsp;</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 9;">I</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 10;">D</span>
                         <span class="sr-only">Email</span>
                     </label>
-                    <div class="form-group__input" style="position:relative; left:18px;">
-                        <input required type="email" id="email" class="form-input"
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Enter email address"
-                            placeholder="Enter email address" v-model="email" />
+                    <div class="form-group__input" style="position:relative; left:-10px;">
+                        <input required id="email" class="form-input"
+    pattern="^[A-Za-z][0-9]{7}$" title="Enter your school ID"
+    placeholder="Enter your school ID" v-model="email" />
                         <div class="form-group__error">Invalid Email</div>
                     </div>
                 </div>
@@ -52,7 +52,6 @@
                 </div>
                 <Button label="Submit"></Button>
             </form>
-            <GoogleLogin :callback="callback" />
         </div>
     </div>
 </template>
@@ -65,7 +64,7 @@ import Button from '../components/Button.vue'
 
 // Set up the router
 const router = useRouter();
-
+1627800
 const password = ref('');
 const email = ref('');
 
@@ -75,7 +74,7 @@ const signIn = () => {
 
     if (emailInput.checkValidity() && passwordInput.checkValidity()) {
         const auth = getAuth();
-        const userEmail = email.value;
+        const userEmail = email.value + "@students.katyisd.org";
         
         createUserWithEmailAndPassword(auth, userEmail, password.value)
             .then((userCredential) => {
