@@ -10,6 +10,5 @@ const currentPage = computed(() => route.path);
     <div id="app">
         <a v-if = "currentPage == '/login' " href="/scouting">scouting</a>
         <a v-if = "currentPage == '/scouting' " href="/login">login</a>
-
     </div>
 </template>

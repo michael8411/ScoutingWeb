@@ -11,7 +11,10 @@
 </template>
   
 <script setup>
-import { ref, watch, inject, defineProps } from "vue";
+import { ref, watch, onMounted } from "vue";
+import { useFormStore } from '../state_management/formStore.ts';
+
+const formStore = useFormStore();
 
 const props = defineProps({
     class: { type: String, default: "", required: true },
@@ -31,8 +34,11 @@ const validMessage = `Valid ${trimmedLabel}   `;
 
 
 const inputText = ref(props.initialValue);
-const submissionMap = inject("submissionMap");
-submissionMap.value.set(trimmedLabel, props.initialValue);
+const submissionMap = formStore.submissionData;
+
+onMounted(() => {
+  formStore.setValue(trimmedLabel, props.initialValue);
+});
 
 let validationStatusMessage = "";
 
@@ -49,37 +55,37 @@ function handleKeyPress(event) {
 }
 
 function handleConstraints(constraints, newValue) {
-  switch (constraints) {
-    case "Initials":
-      if (!/^[a-zA-Z]*$/.test(newValue)) {
-        inputText.value = newValue.slice(0, -1);
-      }
+    switch (constraints) {
+        case "Initials":
+            if (!/^[a-zA-Z]*$/.test(newValue)) {
+                inputText.value = newValue.slice(0, -1);
+            }
 
-      if (newValue.length === 0) {
-        submissionMap.value.set(trimmedLabel, "");
-        validationStatusMessage = "";
-      } else if (newValue.length < 2) {
-        submissionMap.value.set(trimmedLabel, "");
-        validationStatusMessage = invalidMessage;
-      } else {
-        document.getElementById(labelId).style.color = "var(--color-text)";
-        submissionMap.value.set(trimmedLabel, newValue);
-        validationStatusMessage = validMessage;
-      }
-      break;
-    case "Letters":
-      inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-      submissionMap.value.set(trimmedLabel, newValue);
-      break;
-    case "Text":
-      inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
-      submissionMap.value.set(trimmedLabel, newValue);
-      break;
-    case "Numbers":
-      inputText.value = newValue.replace(/\D/g, "");
-      submissionMap.value.set(trimmedLabel, newValue);
-      break;
-  }
+            if (newValue.length === 0) {
+                formStore.setValue(trimmedLabel, "");
+                validationStatusMessage = "";
+            } else if (newValue.length < 2) {
+                formStore.setValue(trimmedLabel, "");
+                validationStatusMessage = invalidMessage;
+            } else {
+                document.getElementById(labelId).style.color = "var(--color-text)";
+                formStore.setValue(trimmedLabel, newValue);
+                validationStatusMessage = validMessage;
+            }
+            break;
+        case "Letters":
+            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+        case "Text":
+            inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+        case "Numbers":
+            inputText.value = newValue.replace(/\D/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+    }
 }
 function handleMaxLength(newValue) {
     const maxLength = props.maxlength;
@@ -100,10 +106,10 @@ function handleFilterFile(newValue) {
 
         if (isValueValid) {
             document.getElementById(labelId).style.color = "var(--color-text)";
-            submissionMap.value.set(trimmedLabel, newValue);
+            formStore.setValue(trimmedLabel, newValue);
             validationStatusMessage = validMessage;
         } else {
-            submissionMap.value.set(trimmedLabel, "");
+            formStore.setValue(trimmedLabel, "");
             validationStatusMessage = getValidationMessage(newValue);
         }
     }
@@ -115,10 +121,11 @@ watch(inputText, (newValue) => {
 });
 </script>
 
+
 <style scoped>
 .maxChar {
     position: relative;
-    left : 5px;
+    left: 5px;
     font-size: 11px;
 }
 
