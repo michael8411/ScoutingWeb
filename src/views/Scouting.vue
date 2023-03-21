@@ -43,7 +43,7 @@
 </template>
   
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import optionsJSON from '../data/options.json';
 import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
@@ -62,17 +62,11 @@ function refresh() {
 
 setTimeout(refresh, 1000000);
 
-watch(
-  () => [formStore.getValue("Scout's Initials"), formStore.getValue("Team Number")],
-  async ([scoutInitials, teamNumber]) => {
-    if (scoutInitials == '' || teamNumber == '') {
-      optionList.value.forEach(option => {
+onMounted(() => {
+  optionList.value.forEach(option => {
         formStore.setValue(option.optionLabel, '');
       });
-    }
-  }
-);
-
+});
 function onChange(event, key) {
   formStore.setValue(key, event.target.value);
   printSubmissionData();
