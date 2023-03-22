@@ -31,6 +31,7 @@ const props = defineProps({
     constraints: { type: String, default: "", required: false },
     initialValue: { type: String, default: "", required: false },
     reset: { type: Boolean, default: false, required: false },
+    resetBehavior: { type: String, default: "default", required: false },
 });
 
 const labelId = props.label;
@@ -58,9 +59,19 @@ watch(inputText, (newValue) => {
 });
 
 function resetField() {
-    inputText.value = "";
-    formStore.setValue(trimmedLabel, "");
-    validationStatusMessage = "";
+  switch (props.resetBehavior) {
+    case "preserve":
+      // Do not reset the field
+      break;
+    case "increment":
+      inputText.value = (parseInt(inputText.value) + 1).toString();
+      formStore.setValue(trimmedLabel, inputText.value);
+      break;
+    default:
+      inputText.value = "";
+      formStore.setValue(trimmedLabel, "");
+      validationStatusMessage = "";
+  }
 }
 
 function handleMaxLength(newValue) {

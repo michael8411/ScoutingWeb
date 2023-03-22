@@ -25,13 +25,13 @@
       <div class="textboxes">
         <TextField v-bind="additionalCommentsField" :reset="resetVal" />
       </div>
-      <Button @click="toggleReset" label="Submit to Database"></Button>
+      <Button @click="toggleReset()" label="Submit to Database"></Button>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import optionsJSON from '../data/options.json';
 import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
@@ -48,6 +48,7 @@ const textFields = [
     class: 'scouts-initials-textfield',
     constraints: 'Initials',
     label: "Scout's Initials:",
+    resetBehavior: 'preserve',
     maxlength: 2,
   },
   {
@@ -63,6 +64,7 @@ const textFields = [
     label: 'Match Number:',
     maxlength: 2,
     initialValue: '1',
+    resetBehavior: 'increment',
   },
 ];
 
@@ -85,8 +87,17 @@ function onChange(event, key) {
 }
 
 function toggleReset() {
-  resetVal.value = !resetVal.value;
+  resetVal.value = true;
 }
+
+watch(resetVal, (newValue, oldValue) => {
+  setTimeout(() => {
+    if (newValue === true) {
+      resetVal.value = false;
+      console.log('Resetting form');
+    }   
+  }, 1500);
+});
 
 function printSubmissionData() {
   console.log("----- Submission Data -----");

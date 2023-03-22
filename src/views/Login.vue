@@ -64,7 +64,6 @@ import Button from '../components/Button.vue'
 
 // Set up the router
 const router = useRouter();
-1627800
 const password = ref('');
 const email = ref('');
 
