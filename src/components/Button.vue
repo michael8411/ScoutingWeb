@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <button :href="props.href" @click="props.onClick" class="button" role="button">{{ props.label }}</button>
+  <button :href="props.href" @click="props.onClick()" class="button" role="button">{{ props.label }}</button>
 </template>
 
 <style>

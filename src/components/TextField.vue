@@ -3,10 +3,7 @@
     <form>
         <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
             :filterFile="props.filterFile" v-model="inputText" />
-        <label class="maxChar" :id="labelId"><span
-                :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
-                    validationStatusMessage
-                }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
+        <label class="maxChar" :id="labelId">{{ inputText.length }}/{{ props.maxlength }}</label>
     </form>
 </template>
   
@@ -115,9 +112,9 @@ function handleFilterFile(newValue) {
     }
 }
 watch(inputText, (newValue) => {
+    handleConstraints(props.constraints, newValue);
     handleMaxLength(newValue);
     handleFilterFile(newValue);
-    handleConstraints(props.constraints, newValue);
 });
 </script>
 
