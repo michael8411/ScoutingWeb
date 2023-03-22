@@ -5,11 +5,6 @@
             <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
                 :filterFile="props.filterFile" v-model="inputText" />
             <label class="maxChar" :id="labelId">
-                <span :style="{
-                    color: validationStatusMessage === validMessage ? 'green' : 'red',
-                }">
-                    {{ validationStatusMessage }}
-                </span>
                 {{ inputText.length }}/{{ props.maxlength }}
             </label>
         </form>
