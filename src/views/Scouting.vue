@@ -75,6 +75,9 @@ const additionalCommentsField = {
   maxlength: 200,
 };
 
+
+  
+
 onMounted(() => {
   optionList.value.forEach(option => {
     formStore.setValue(option.optionLabel, '');
@@ -93,6 +96,9 @@ function toggleReset() {
 watch(resetVal, (newValue, oldValue) => {
   setTimeout(() => {
     if (newValue === true) {
+      optionList.value.forEach(option => {
+    formStore.setValue(option.optionLabel, '');
+  });
       resetVal.value = false;
       console.log('Resetting form');
     }   
