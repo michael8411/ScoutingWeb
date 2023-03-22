@@ -1,7 +1,7 @@
 <template>
   <div class="custom-select">
     <select ref="selectDropdown" @change="updateValue" class="custom-dropdown">
-      <option class="option" value="Default" disabled selected>Select your option </option>
+      <option class="option" value="Default" disabled selected>Select your option</option>
       <option v-for="choice in options.choices" :value="choice">
         {{ choice }}
       </option>
@@ -9,13 +9,11 @@
     <div class="select-arrow">
       <img src="../assets/images/select-arrow.png">
     </div>
-
   </div>
 </template>
-  
 
 <script setup>
-import { ref, provide, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -27,25 +25,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
-});
-
-watch(() => props.reset, (value) => {
-  if (value) {
-    resetSelection();
-  }
 });
 
 const selectDropdown = ref(null);
 
 function resetSelection() {
   selectDropdown.value.selectedIndex = 0;
-  const selectedOption = selectDropdown.value
 }
 
-
-
-
+watch(() => props.reset, (value) => {
+  if (value) {
+    resetSelection();
+  }
+});
 </script>
   
   
