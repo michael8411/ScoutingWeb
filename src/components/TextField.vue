@@ -48,11 +48,19 @@ watch(() => props.reset, (value) => {
 });
 
 watch(inputText, (newValue) => {
-    handleMaxLength(newValue);
     handleConstraints(props.constraints, newValue);
+    handleMaxLength(newValue);
     handleFilterFile(newValue);
 });
 
+function countTextFields{
+    var count = 0;
+    for (var i = 0; i < textFields.length; i++) {
+        count++;
+    }
+    return count;
+}
+console.log(countTextFields)
 function resetField() {
   switch (props.resetBehavior) {
     case "preserve":
