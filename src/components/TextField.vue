@@ -1,19 +1,10 @@
 <template>
-    <div>
-        <label>{{ labelId }}</label>
-        <form>
-            <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
-                :filterFile="props.filterFile" v-model="inputText" />
-            <label class="maxChar" :id="labelId">
-                <span :style="{
-                    color: validationStatusMessage === validMessage ? 'green' : 'red',
-                }">
-                    {{ validationStatusMessage }}
-                </span>
-                {{ inputText.length }}/{{ props.maxlength }}
-            </label>
-        </form>
-    </div>
+    <label>{{ labelId }}</label>
+    <form>
+        <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
+            :filterFile="props.filterFile" v-model="inputText" />
+        <label class="maxChar" :id="labelId">{{ inputText.length }}/{{ props.maxlength }}</label>
+    </form>
 </template>
   
 <script setup>
@@ -91,49 +82,11 @@ function handleFilterFile(newValue) {
         }
     }
 }
-
-function handleConstraints(constraints, newValue) {
-    switch (constraints) {
-        case "Initials":
-            validateInitials(newValue);
-            break;
-        case "Letters":
-            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Numbers":
-            inputText.value = newValue.replace(/\D/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-    }
-}
-
-function validateInitials(newValue) {
-    if (!/^[a-zA-Z]*$/.test(newValue)) {
-        inputText.value = newValue.slice(0, -1);
-    }
-
-    if (newValue.length === 0) {
-        formStore.setValue(trimmedLabel, "");
-        validationStatusMessage = "";
-    } else if (newValue.length < 2) {
-        formStore.setValue(trimmedLabel, "");
-        validationStatusMessage = invalidMessage;
-    } else {
-        document.getElementById(labelId).style.color = "var(--color-text)";
-        formStore.setValue(trimmedLabel, newValue);
-        validationStatusMessage = validMessage;
-    }
-}
-
-function getValidationMessage(newValue) {
-    return newValue.length === 0 ? "" : invalidMessage;
-}
-
+watch(inputText, (newValue) => {
+    handleConstraints(props.constraints, newValue);
+    handleMaxLength(newValue);
+    handleFilterFile(newValue);
+});
 </script>
 
 

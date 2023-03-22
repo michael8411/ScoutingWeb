@@ -25,7 +25,8 @@
       <div class="textboxes">
         <TextField v-bind="additionalCommentsField" :reset="resetVal" />
       </div>
-      <Button @click="toggleReset" label="Submit to Database"></Button>
+      <Button id="database-button" @click="toggleReset" label="Submit to Database" :onClick="onClick"></Button>
+      <h2 class="hide" id="invalid-popup">INVALID INFORMATION</h2>
     </main>
   </div>
 </template>
@@ -95,6 +96,21 @@ function printSubmissionData() {
   });
   console.log("--------------------");
 }
+
+function onClick(){
+  for (const [key, value] of formStore.submissionData.entries()) {
+    var popup = document.getElementById("invalid-popup");
+    if (value === "" && key != "Additional Comments") {
+      popup.innerHTML = key + " is Invalid";
+      popup.classList.remove("hide");
+      break;
+    }
+    else {
+      popup.classList.add("hide");
+    }
+  }
+  
+}
 </script>
   
 <style>
@@ -118,6 +134,7 @@ function printSubmissionData() {
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
+  margin-bottom: 20px;
   gap: 30px;
   width: 50%;
   min-width: fit-content;
@@ -172,6 +189,15 @@ function printSubmissionData() {
   padding-right: 0.5em;
   padding-left: 0.5em;
 }
+
+  #invalid-popup{
+    margin: auto;
+    color: red;
+  }
+
+  .hide {
+    visibility: hidden;
+  }
 </style>
   
   
