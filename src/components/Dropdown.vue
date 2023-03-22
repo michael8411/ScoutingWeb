@@ -1,30 +1,58 @@
 <template>
-    <div class="custom-select">
-        <select class="custom-dropdown">
-            <option class="option" value="Default" disabled selected>Select your option</option>
-            <option v-for="choice in options.choices" :value="choice">
-                {{ choice }}
-            </option>
-        </select>
-      <div class="select-arrow">
-        <img src="../assets/images/select-arrow.png" >
-      </div>
+  <div class="custom-select">
+    <select ref="selectDropdown" @change="updateValue" class="custom-dropdown">
+      <option class="option" value="Default" disabled selected>Select your option </option>
+      <option v-for="choice in options.choices" :value="choice">
+        {{ choice }}
+      </option>
+    </select>
+    <div class="select-arrow">
+      <img src="../assets/images/select-arrow.png">
     </div>
+
+  </div>
 </template>
   
-<script setup>
 
+<script setup>
+import { ref, provide, onMounted, watch } from 'vue';
 
 const props = defineProps({
-    options: Object,
+  modelValue: {
+    type: String,
+    default: 'Default',
+  },
+  options: Object,
+  reset: {
+    type: Boolean,
+    default: false,
+  },
+
 });
+
+watch(() => props.reset, (value) => {
+  if (value) {
+    resetSelection();
+  }
+});
+
+const selectDropdown = ref(null);
+
+function resetSelection() {
+  selectDropdown.value.selectedIndex = 0;
+  const selectedOption = selectDropdown.value
+}
+
+
+
 
 </script>
   
+  
 <style scoped>
 .custom-select {
-    display: flex;
-    width: fit-content;
+  display: flex;
+  width: fit-content;
   position: relative;
   display: inline-block;
   border-radius: 4px;
@@ -75,6 +103,7 @@ const props = defineProps({
 .custom-select:hover {
   border-color: var(--accentBg);
 }
+
 .custom-select select option {
   background-color: var(--vt-c-black-soft);
   color: var(--baseFg);

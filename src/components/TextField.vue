@@ -1,18 +1,24 @@
 <template>
-    <label>{{ labelId }}</label>
-    <form>
-        <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
-            :filterFile="props.filterFile" v-model="inputText" />
-        <label class="maxChar" :id="labelId"><span
-                :style="{ color: validationStatusMessage === validMessage ? 'green' : 'red' }">{{
-                    validationStatusMessage
-                }}</span>{{ inputText.length }}/{{ props.maxlength }}</label>
-    </form>
+    <div>
+        <label>{{ labelId }}</label>
+        <form>
+            <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
+                :filterFile="props.filterFile" v-model="inputText" />
+            <label class="maxChar" :id="labelId">
+                <span :style="{
+                    color: validationStatusMessage === validMessage ? 'green' : 'red',
+                }">
+                    {{ validationStatusMessage }}
+                </span>
+                {{ inputText.length }}/{{ props.maxlength }}
+            </label>
+        </form>
+    </div>
 </template>
   
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { useFormStore } from '../state_management/formStore.ts';
+import { useFormStore } from "../state_management/formStore.ts";
 
 const formStore = useFormStore();
 
@@ -23,70 +29,42 @@ const props = defineProps({
     maxlength: { type: Number, default: 100, required: false },
     title: { type: String, default: "", required: false },
     constraints: { type: String, default: "", required: false },
-    initialValue: { type: String, default: "", required: false }
+    initialValue: { type: String, default: "", required: false },
+    reset: { type: Boolean, default: false, required: false },
 });
 
 const labelId = props.label;
-
 const trimmedLabel = labelId.replace(":", "").trim();
 const invalidMessage = `Invalid ${trimmedLabel}   `;
 const validMessage = `Valid ${trimmedLabel}   `;
 
-
 const inputText = ref(props.initialValue);
-const submissionMap = formStore.submissionData;
-
 onMounted(() => {
-  formStore.setValue(trimmedLabel, props.initialValue);
+    formStore.setValue(trimmedLabel, props.initialValue);
 });
 
 let validationStatusMessage = "";
 
-//make a watch for the submissionMap
+watch(inputText, (newValue) => {
+    handleMaxLength(newValue);
+    handleConstraints(props.constraints, newValue);
+    handleFilterFile(newValue);
+});
 
-function getValidationMessage(newValue) {
-    return newValue.length === 0 ? "" : invalidMessage;
-}
-
-function handleKeyPress(event) {
-    if (event.keyCode === 13) {
-        event.preventDefault();
+watch(() => props.reset, (value) => {
+    if (value) {
+        resetField();
     }
+});
+
+
+
+function resetField() {
+    inputText.value = "";
+    formStore.setValue(trimmedLabel, "");
+    validationStatusMessage = "";
 }
 
-function handleConstraints(constraints, newValue) {
-    switch (constraints) {
-        case "Initials":
-            if (!/^[a-zA-Z]*$/.test(newValue)) {
-                inputText.value = newValue.slice(0, -1);
-            }
-
-            if (newValue.length === 0) {
-                formStore.setValue(trimmedLabel, "");
-                validationStatusMessage = "";
-            } else if (newValue.length < 2) {
-                formStore.setValue(trimmedLabel, "");
-                validationStatusMessage = invalidMessage;
-            } else {
-                document.getElementById(labelId).style.color = "var(--color-text)";
-                formStore.setValue(trimmedLabel, newValue);
-                validationStatusMessage = validMessage;
-            }
-            break;
-        case "Letters":
-            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Numbers":
-            inputText.value = newValue.replace(/\D/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-    }
-}
 function handleMaxLength(newValue) {
     const maxLength = props.maxlength;
 
@@ -105,7 +83,6 @@ function handleFilterFile(newValue) {
         const isValueValid = filterFile.includes(newValue);
 
         if (isValueValid) {
-            document.getElementById(labelId).style.color = "var(--color-text)";
             formStore.setValue(trimmedLabel, newValue);
             validationStatusMessage = validMessage;
         } else {
@@ -114,11 +91,49 @@ function handleFilterFile(newValue) {
         }
     }
 }
-watch(inputText, (newValue) => {
-    handleMaxLength(newValue);
-    handleFilterFile(newValue);
-    handleConstraints(props.constraints, newValue);
-});
+
+function handleConstraints(constraints, newValue) {
+    switch (constraints) {
+        case "Initials":
+            validateInitials(newValue);
+            break;
+        case "Letters":
+            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+        case "Text":
+            inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+        case "Numbers":
+            inputText.value = newValue.replace(/\D/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+    }
+}
+
+function validateInitials(newValue) {
+    if (!/^[a-zA-Z]*$/.test(newValue)) {
+        inputText.value = newValue.slice(0, -1);
+    }
+
+    if (newValue.length === 0) {
+        formStore.setValue(trimmedLabel, "");
+        validationStatusMessage = "";
+    } else if (newValue.length < 2) {
+        formStore.setValue(trimmedLabel, "");
+        validationStatusMessage = invalidMessage;
+    } else {
+        document.getElementById(labelId).style.color = "var(--color-text)";
+        formStore.setValue(trimmedLabel, newValue);
+        validationStatusMessage = validMessage;
+    }
+}
+
+function getValidationMessage(newValue) {
+    return newValue.length === 0 ? "" : invalidMessage;
+}
+
 </script>
 
 
