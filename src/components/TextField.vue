@@ -31,11 +31,48 @@ const inputText = ref("");
 const submissionMap = inject("submissionMap");
 submissionMap.value.set(props.label.replace(":", "").trim(), "");
 
+const inputText = ref(props.initialValue);
+
+onMounted(() => {
+    formStore.setValue(trimmedLabel, props.initialValue);
+});
 
 let validationStatusMessage = "";
 
-function getValidationMessage(newValue) {
-    return newValue.length === 0 ? "" : invalidMessage;
+watch(() => props.reset, (value) => {
+    if (value) {
+        resetField();
+    }
+});
+
+watch(inputText, (newValue) => {
+    handleConstraints(props.constraints, newValue);
+    handleMaxLength(newValue);
+    handleFilterFile(newValue);
+});
+
+function countTextFields(){
+    var count = 0;
+    for (var i = 0; i < textFields.length; i++) {
+        count++;
+    }
+    return count;
+}
+
+function resetField() {
+  switch (props.resetBehavior) {
+    case "preserve":
+      // Do not reset the field
+      break;
+    case "increment":
+      inputText.value = (parseInt(inputText.value) + 1).toString();
+      formStore.setValue(trimmedLabel, inputText.value);
+      break;
+    default:
+      inputText.value = "";
+      formStore.setValue(trimmedLabel, "");
+      validationStatusMessage = "";
+  }
 }
 
 
