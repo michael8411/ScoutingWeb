@@ -1,7 +1,12 @@
 <template>
   <div style="height: 100%; padding: 2%;">
     <header id="top">
-      <img id="logo" src="../assets/images/cryptonite_logo.png">
+      <div id="logo-logout">
+        <img id="logo" src="../assets/images/cryptonite_logo.png">
+        <button id="logout">
+          <img id="logout_image" src="../assets/images/logout.png">
+        </button>
+      </div>
       <h1 id="title">Comment Scouting</h1>
     </header>
 
@@ -155,6 +160,8 @@ function printSubmissionData() {
 
 #top {
   width: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 #comments {
@@ -179,6 +186,26 @@ function printSubmissionData() {
   height: auto;
   top: 0;
   font-size: calc(100% + 1.8vw);
+}
+
+#logo-logout{
+  display: flex;
+  flex-direction: row;
+}
+
+#logout{
+  background-color: transparent;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+
+#logout_image{
+  max-width: 15%;
+  height: 20%;
+  pointer-events: none;
+  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
 }
 
 #options {
