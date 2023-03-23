@@ -4,7 +4,8 @@
       <div id="logo-logout">
         <img id="logo" src="../assets/images/cryptonite_logo.png">
         <button id="logout">
-          <img id="logout_image" src="../assets/images/logout.png">
+          <img id="logout-image" src="../assets/images/logout.png">
+          <p id="logout-text">Logout</p>
         </button>
       </div>
       <h1 id="title">Comment Scouting</h1>
@@ -191,21 +192,38 @@ function printSubmissionData() {
 #logo-logout{
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 #logout{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: center;
   background-color: transparent;
   padding: 0;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
+  margin-top: auto;
+  margin: 0;
+  border: none;
+  max-width: 20%;
+  height: 100%;
 }
 
-#logout_image{
-  max-width: 15%;
+#logout-text{
+  max-width: 100%;
+  font-size: 2vw;
+  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
+  font-weight: bold;
+  font-family: 'Lemon/Milk';
+}
+
+#logout-image{
+  max-width: 25%;
   height: 20%;
   pointer-events: none;
   filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 #options {
