@@ -88,39 +88,39 @@ function toggleReset() {
   resetVal.value = true;
 }
 function onClick() {
-  addMatchToDatabase();
+  for (const [key, value] of formStore.submissionData.entries()) {
+    var popup = document.getElementById("invalid-popup");
+    if (value === "" && key != "Additional Comments") {
+      popup.innerHTML = key + " is Invalid";
+      popup.classList.remove("hide");
+      break;
+    }
+    else {
+      popup.classList.add("hide");
+    }
+  }
+  if (popup.className === "hide") {
+    addMatchToDatabase();
+    toggleReset();
+  }
 }
 async function addMatchToDatabase() {
   try {
-    let obj = {};
+    let submitMap = {};
     formStore.submissionData.forEach((value, key) => {
       if(key != "Scout's Initials"){
-        obj[key] = value
+        submitMap[key] = value
       }
     });
-    JSON.stringify(obj);
 
-    const matchNum = "Match " + formStore.submissionData.get('Match Number');
+    const matchNumString = "Match " + formStore.submissionData.get('Match Number');
     const newMatch = doc(database, "scouter initials", formStore.submissionData.get("Scout's Initials"));
-    await setDoc(newMatch, {"Match": obj});
+    await setDoc(newMatch, {[matchNumString]: submitMap}, { merge: true });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
-// for (const [key, value] of formStore.submissionData.entries()) {
-//   var popup = document.getElementById("invalid-popup");
-//   if (value === "" && key != "Additional Comments") {
-//     popup.innerHTML = key + " is Invalid";
-//     popup.classList.remove("hide");
-//     break;
-//   }
-//   else {
-//     popup.classList.add("hide");
-//   }
-// }
-// if (popup.className === "hide") {
-//   toggleReset();
-// }
+
 watch(resetVal, (newValue, oldValue) => {
   setTimeout(() => {
     if (newValue === true) {
@@ -128,7 +128,6 @@ watch(resetVal, (newValue, oldValue) => {
         formStore.setValue(option.optionLabel, '');
       });
       resetVal.value = false;
-      console.log('Resetting form');
     }
   }, 1500);
 });
