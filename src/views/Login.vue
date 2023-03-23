@@ -11,9 +11,9 @@
                 <div class="Eform-group">
                     <label for="email" class="form-label">
                         <span aria-hidden="true" class="label__letter" style="--index: 0;">K</span>
-                        <span aria-hidden="true" class="label__letter" style="--index: 1;">A</span>
-                        <span aria-hidden="true" class="label__letter" style="--index: 2;">T</span>
-                        <span aria-hidden="true" class="label__letter" style="--index: 3;">Y</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 1;">a</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 2;">t</span>
+                        <span aria-hidden="true" class="label__letter" style="--index: 3;">y</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 4;">&nbsp;</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 5;">I</span>
                         <span aria-hidden="true" class="label__letter" style="--index: 6;">S</span>

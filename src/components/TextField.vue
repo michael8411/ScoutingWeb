@@ -53,14 +53,13 @@ watch(inputText, (newValue) => {
     handleFilterFile(newValue);
 });
 
-function countTextFields{
+function countTextFields(){
     var count = 0;
     for (var i = 0; i < textFields.length; i++) {
         count++;
     }
     return count;
 }
-console.log(countTextFields)
 function resetField() {
   switch (props.resetBehavior) {
     case "preserve":

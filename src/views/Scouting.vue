@@ -33,17 +33,17 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 import optionsJSON from '../data/options.json';
 import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
 import Dropdown from '../components/Dropdown.vue';
 import Button from '../components/Button.vue';
 import { useFormStore } from '../state_management/formStore.ts';
-
+import database from '../main.ts';
 const formStore = useFormStore();
 const resetVal = ref(false);
 const optionList = ref(optionsJSON);
-
 const textFields = [
   {
     class: 'scouts-initials-textfield',
@@ -68,7 +68,6 @@ const textFields = [
     resetBehavior: 'increment',
   },
 ];
-
 const additionalCommentsField = {
   class: 'additional-comments-textfield',
   constraints: 'Text',
@@ -76,53 +75,63 @@ const additionalCommentsField = {
   maxlength: 200,
 };
 
-
-  
-
 onMounted(() => {
   optionList.value.forEach(option => {
     formStore.setValue(option.optionLabel, '');
   });
 });
-
 function onChange(event, key) {
   formStore.setValue(key, event.target.value);
   printSubmissionData();
 }
-
 function toggleReset() {
   resetVal.value = true;
 }
-
 function onClick() {
-  for (const [key, value] of formStore.submissionData.entries()) {
-    var popup = document.getElementById("invalid-popup");
-    if (value === "" && key != "Additional Comments") {
-      popup.innerHTML = key + " is Invalid";
-      popup.classList.remove("hide");
-      break;
-    }
-    else {
-      popup.classList.add("hide");
-    }
-  }
-  if(popup.className === "hide"){
-    toggleReset();
+  addMatchToDatabase();
+}
+async function addMatchToDatabase() {
+  try {
+    let obj = {};
+    formStore.submissionData.forEach((value, key) => {
+      if(key != "Scout's Initials"){
+        obj[key] = value
+      }
+    });
+    JSON.stringify(obj);
+
+    const matchNum = "Match " + formStore.submissionData.get('Match Number');
+    const newMatch = doc(database, "scouter initials", formStore.submissionData.get("Scout's Initials"));
+    await setDoc(newMatch, {"Match": obj});
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
 }
-
+// for (const [key, value] of formStore.submissionData.entries()) {
+//   var popup = document.getElementById("invalid-popup");
+//   if (value === "" && key != "Additional Comments") {
+//     popup.innerHTML = key + " is Invalid";
+//     popup.classList.remove("hide");
+//     break;
+//   }
+//   else {
+//     popup.classList.add("hide");
+//   }
+// }
+// if (popup.className === "hide") {
+//   toggleReset();
+// }
 watch(resetVal, (newValue, oldValue) => {
   setTimeout(() => {
     if (newValue === true) {
       optionList.value.forEach(option => {
-    formStore.setValue(option.optionLabel, '');
-  });
+        formStore.setValue(option.optionLabel, '');
+      });
       resetVal.value = false;
       console.log('Resetting form');
-    }   
+    }
   }, 1500);
 });
-
 function printSubmissionData() {
   console.log("----- Submission Data -----");
   formStore.submissionData.forEach((value, key) => {

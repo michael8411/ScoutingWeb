@@ -6,6 +6,7 @@ import App from './App.vue'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,7 +21,10 @@ const firebaseConfig = {
   appId: "1:360081015403:web:92f78f843f4315e272272e",
   measurementId: "G-048BY8QV6D"
 };
-initializeApp(firebaseConfig);
+const firebase = initializeApp(firebaseConfig);
+const db = getFirestore(firebase);
+
+export default db
 
 import router from './router'
 
