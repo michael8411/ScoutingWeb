@@ -119,8 +119,8 @@ async function addMatchToDatabase() {
     });
 
     const matchNumString = "match" + formStore.submissionData.get('Match Number');
-    const newMatch = collection(database, "matches", matchNumString, formStore.submissionData.get('Team Number'));
-    await addDoc(newMatch, submitMap);
+    const newMatch = doc(database, "matches", matchNumString, "teams", formStore.submissionData.get('Team Number'));
+    await setDoc(newMatch, submitMap);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
