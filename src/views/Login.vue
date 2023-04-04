@@ -99,6 +99,9 @@ const signIn = () => {
                 }
             });
     }
+    else if(passwordInput.checkValidity()){
+        console.log("Invalid Password");
+    }
 };
 </script>
 

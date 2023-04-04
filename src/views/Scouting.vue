@@ -3,7 +3,7 @@
     <header id="top">
       <div id="logo-logout">
         <img id="logo" src="../assets/images/cryptonite_logo.png">
-        <button id="logout">
+        <button id="logout" @click="logoutOnClick()">
           <img id="logout-image" src="../assets/images/logout.png">
           <p id="logout-text">Logout</p>
         </button>
@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, Timestamp} from "firebase/firestore";
 import optionsJSON from '../data/options.json';
 import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
@@ -47,6 +47,7 @@ import Dropdown from '../components/Dropdown.vue';
 import Button from '../components/Button.vue';
 import { useFormStore } from '../state_management/formStore.ts';
 import database from '../main.ts';
+import router from '../router/index.ts'
 const formStore = useFormStore();
 const resetVal = ref(false);
 const optionList = ref(optionsJSON);
@@ -114,17 +115,19 @@ async function addMatchToDatabase() {
   try {
     let submitMap = {};
     formStore.submissionData.forEach((value, key) => {
-      if(key != "Scout's Initials"){
-        submitMap[key] = value
-      }
+      submitMap[key] = value
     });
 
-    const matchNumString = "Match " + formStore.submissionData.get('Match Number');
-    const newMatch = doc(database, "scouter initials", formStore.submissionData.get("Scout's Initials"));
-    await setDoc(newMatch, {[matchNumString]: submitMap}, { merge: true });
+    const matchNumString = "match" + formStore.submissionData.get('Match Number');
+    const newMatch = collection(database, "matches", matchNumString, formStore.submissionData.get('Team Number'));
+    await addDoc(newMatch, submitMap);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+}
+
+async function logoutOnClick(){
+  router.push('/login')
 }
 
 watch(resetVal, (newValue, oldValue) => {
