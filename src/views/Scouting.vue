@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { collection, addDoc, doc, setDoc, Timestamp} from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 import optionsJSON from '../data/options.json';
 import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
@@ -53,11 +53,12 @@ const resetVal = ref(false);
 const optionList = ref(optionsJSON);
 const textFields = [
   {
-    class: 'scouts-initials-textfield',
-    constraints: 'Initials',
-    label: "Scout's Initials:",
-    resetBehavior: 'preserve',
+    class: 'match-number-textfield',
+    constraints: 'Numbers',
+    label: 'Match Number:',
     maxlength: 2,
+    initialValue: '1',
+    resetBehavior: 'increment',
   },
   {
     class: 'team-number-textfield',
@@ -67,13 +68,13 @@ const textFields = [
     maxlength: 5,
   },
   {
-    class: 'match-number-textfield',
-    constraints: 'Numbers',
-    label: 'Match Number:',
+    class: 'scouts-initials-textfield',
+    constraints: 'Initials',
+    label: "Scout's Initials:",
+    resetBehavior: 'preserve',
     maxlength: 2,
-    initialValue: '1',
-    resetBehavior: 'increment',
   },
+
 ];
 const additionalCommentsField = {
   class: 'additional-comments-textfield',
@@ -126,7 +127,7 @@ async function addMatchToDatabase() {
   }
 }
 
-async function logoutOnClick(){
+async function logoutOnClick() {
   router.push('/login')
 }
 
@@ -192,13 +193,13 @@ function printSubmissionData() {
   font-size: calc(100% + 1.8vw);
 }
 
-#logo-logout{
+#logo-logout {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-#logout{
+#logout {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -212,7 +213,7 @@ function printSubmissionData() {
   height: 100%;
 }
 
-#logout-text{
+#logout-text {
   max-width: 100%;
   font-size: 2vw;
   filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
@@ -220,7 +221,7 @@ function printSubmissionData() {
   font-family: 'Lemon/Milk';
 }
 
-#logout-image{
+#logout-image {
   max-width: 25%;
   height: 20%;
   pointer-events: none;
