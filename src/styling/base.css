@@ -68,5 +68,5 @@ body {
 
 @font-face {
   font-family: "Lemon/Milk";
-  src: url("src/assets/fonts/Lemon-Milk/Lemon-Milk-Pro-Regular.woff") format('woff');
+  src: url("/src/assets/fonts/Lemon-Milk/Lemon-Milk-Pro-Regular.woff") format('woff');
 }
