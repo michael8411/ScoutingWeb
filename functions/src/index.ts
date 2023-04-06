@@ -1,9 +1,8 @@
 import * as functions from "firebase-functions";
-import {google, sheets_v4 as SheetsV4} from "googleapis";
+import {google} from "googleapis";
 import * as admin from "firebase-admin";
-import { useFormStore } from "../../src/state_management/formStore";
+import fieldOrder from "./fieldOrder.json";
 
-const formStore = useFormStore();
 admin.initializeApp();
 
 const SPREADSHEET_ID = "160mBoUWvv-_jrL8Pfu_rfi454j631QZtSsbcoC-Bcew";
@@ -23,24 +22,24 @@ const sheets = google.sheets({
 
 exports.addMatchToSheet = functions.firestore
   .document("matches/{matchId}/teams/{teamId}")
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap) => {
     const data = snap.data();
 
     const range = "Sheet1!A1:Z";
-    const dbKeys = Object.keys(data);
-    const values = new Array();
-    for (var mapKey of formStore.submissionData.keys()){
-      for (var dbKey of dbKeys){
-        if (mapKey == dbKey){
-          values.push(formStore.submissionData.get(mapKey));
-        }
+    const values = [];
+
+    const desiredOrder = fieldOrder.keys;
+
+    for (const key of desiredOrder) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        values.push(data[key]);
+      } else {
+        values.push(null);
       }
     }
 
-
-
     try {
-      const request: SheetsV4.Params$Resource$Spreadsheets$Values$Append = {
+      const request = {
         spreadsheetId: SPREADSHEET_ID,
         range: range,
         valueInputOption: "RAW",
