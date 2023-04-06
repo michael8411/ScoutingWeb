@@ -90,7 +90,6 @@ onMounted(() => {
 });
 function onChange(event, key) {
   formStore.setValue(key, event.target.value);
-  printSubmissionData();
 }
 function toggleReset() {
   resetVal.value = true;
