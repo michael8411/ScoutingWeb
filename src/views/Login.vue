@@ -78,8 +78,6 @@ const signIn = () => {
         createUserWithEmailAndPassword(auth, userEmail, password.value)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log("User created and signed in:", user);
-
                 router.push('/scouting');
             })
             .catch((error) => {
@@ -87,8 +85,6 @@ const signIn = () => {
                     signInWithEmailAndPassword(auth, userEmail, password.value)
                         .then((userCredential) => {
                             const user = userCredential.user;
-                            console.log("Signed in as " + user.email);
-
                             router.push('/scouting');
                         })
                         .catch((error) => {
@@ -100,7 +96,6 @@ const signIn = () => {
             });
     }
     else if(passwordInput.checkValidity()){
-        console.log("Invalid Password");
     }
 };
 </script>
