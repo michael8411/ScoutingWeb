@@ -29,7 +29,7 @@
       </section>
 
       <div class="textboxes">
-        <TextField v-bind="additionalCommentsField" :reset="resetVal" />
+        <TextField v-for="(field, index) in additionalTextFields" :key="index" v-bind="field" :reset="resetVal" />
       </div>
       <Button @click="onClick()" label="Submit to Database"></Button>
       <h2 class="hide" id="invalid-popup">INVALID INFORMATION</h2>
@@ -76,12 +76,20 @@ const textFields = [
   },
 
 ];
-const additionalCommentsField = {
-  class: 'additional-comments-textfield',
-  constraints: 'Text',
-  label: 'Additional Comments:',
-  maxlength: 200,
-};
+const additionalTextFields = [
+  {
+    class: 'auton-info-textfield',
+    constraints: 'Text',
+    label: 'Auton Description:',
+    maxlength: 200,
+  },
+  {
+    class: 'additional-comments-textfield',
+    constraints: 'Text',
+    label: 'Additional Comments:',
+    maxlength: 200,
+  },
+];
 
 onMounted(() => {
   optionList.value.forEach(option => {

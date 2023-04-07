@@ -26,12 +26,11 @@
         ]
     },
     {
-        "optionLabel": "Links",
+        "optionLabel": "Strategic Links",
         "choices": [
             "N/A",
-            "1",
-            "2",
-            "3"
+            "Yes",
+            "No"
         ]
     },
     {
@@ -41,6 +40,15 @@
             "Cubes",
             "Cones",
             "Both"
+        ]
+    },
+    {
+        "optionLabel": "Substation Speed",
+        "choices": [
+            "N/A",
+            "Slow",
+            "Average",
+            "Fast"
         ]
     }
 ]

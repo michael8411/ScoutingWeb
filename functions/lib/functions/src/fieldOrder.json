@@ -1,13 +1,15 @@
 {
     "keys": [
-        "Match Numbers",
-        "Team Numbers",
+        "Match Number",
+        "Team Number",
         "Scout's Initials",
         "Defending Level",
         "Driver Skill",
         "Game Piece Specialization",
-        "Links",
-        "Played Defence",
+        "Strategic Links",
+        "Played Defense",
+        "Substation Speed",
+        "Auton Description",
         "Additional Comments"
     ]
 }
