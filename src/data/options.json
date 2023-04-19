@@ -1,5 +1,13 @@
 [
     {
+        "optionLabel": "Failed Engage in Auton",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
+        ]
+    },
+    {
         "optionLabel": "Played Defense",
         "choices": [
             "N/A",
@@ -12,16 +20,9 @@
         "choices": [
             "N/A",
             "Bad",
+            "Below Average",
             "Average",
-            "Amazing"
-        ]
-    },
-    {
-        "optionLabel": "Defending Level",
-        "choices": [
-            "N/A",
-            "Bad",
-            "Average",
+            "Great",
             "Amazing"
         ]
     },
@@ -43,12 +44,37 @@
         ]
     },
     {
+        "optionLabel": "Preferred Substation",
+        "choices": [
+            "N/A",
+            "Single",
+            "Double",
+            "Floor"
+        ]
+    },
+    {
         "optionLabel": "Substation Speed",
         "choices": [
             "N/A",
             "Slow",
-            "Average",
+            "Moderate",
             "Fast"
+        ]
+    },
+    {
+        "optionLabel": "Gave Away Penalty",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "optionLabel": "Popped Game Piece",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
         ]
     }
 ]

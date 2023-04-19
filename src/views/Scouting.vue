@@ -57,7 +57,6 @@ const textFields = [
     constraints: 'Numbers',
     label: 'Match Number:',
     maxlength: 2,
-    initialValue: '1',
     resetBehavior: 'increment',
   },
   {
@@ -108,6 +107,7 @@ function onClick() {
     if (value === "" && key != "Additional Comments") {
       popup.innerHTML = key + " is Invalid";
       popup.classList.remove("hide");
+      window.scrollTo(0, document.body.scrollHeight);
       break;
     }
     else {

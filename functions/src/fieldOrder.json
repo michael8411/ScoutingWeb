@@ -3,13 +3,16 @@
         "Match Number",
         "Team Number",
         "Scout's Initials",
-        "Defending Level",
+        "Failed Engage in Auton",
         "Driver Skill",
         "Game Piece Specialization",
+        "Preferred Substation",
         "Strategic Links",
         "Played Defense",
         "Substation Speed",
         "Auton Description",
-        "Additional Comments"
+        "Additional Comments",
+        "Gave Away Penalty",
+        "Popped Game Piece"
     ]
 }
