@@ -113,11 +113,14 @@ function handleConstraints(constraints, newValue) {
             formStore.setValue(trimmedLabel, newValue);
             break;
         case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z\s]/g, "");
+            inputText.value = newValue.replace(/[^a-zA-Z\s,.;()'"\/?!]/g, "");
             formStore.setValue(trimmedLabel, newValue);
             break;
         case "Numbers":
             inputText.value = newValue.replace(/\D/g, "");
+            formStore.setValue(trimmedLabel, newValue);
+            break;
+        default:
             formStore.setValue(trimmedLabel, newValue);
             break;
     }
