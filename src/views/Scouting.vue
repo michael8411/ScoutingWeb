@@ -56,7 +56,7 @@ const textFields = [
     class: 'match-number-textfield',
     constraints: 'Numbers',
     label: 'Match Number:',
-    maxlength: 2,
+    maxlength: 3,
     resetBehavior: 'increment',
   },
   {
