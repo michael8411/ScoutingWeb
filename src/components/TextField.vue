@@ -53,7 +53,7 @@ watch(inputText, (newValue) => {
     handleFilterFile(newValue);
 });
 
-function countTextFields(){
+function countTextFields() {
     var count = 0;
     for (var i = 0; i < textFields.length; i++) {
         count++;
@@ -61,19 +61,19 @@ function countTextFields(){
     return count;
 }
 function resetField() {
-  switch (props.resetBehavior) {
-    case "preserve":
-      // Do not reset the field
-      break;
-    case "increment":
-      inputText.value = (parseInt(inputText.value) + 1).toString();
-      formStore.setValue(trimmedLabel, inputText.value);
-      break;
-    default:
-      inputText.value = "";
-      formStore.setValue(trimmedLabel, "");
-      validationStatusMessage = "";
-  }
+    switch (props.resetBehavior) {
+        case "preserve":
+            // Do not reset the field
+            break;
+        case "increment":
+            inputText.value = (parseInt(inputText.value) + 1).toString();
+            formStore.setValue(trimmedLabel, inputText.value);
+            break;
+        default:
+            inputText.value = "";
+            formStore.setValue(trimmedLabel, "");
+            validationStatusMessage = "";
+    }
 }
 
 function handleMaxLength(newValue) {
@@ -113,7 +113,7 @@ function handleConstraints(constraints, newValue) {
             formStore.setValue(trimmedLabel, newValue);
             break;
         case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z\s,.;()'"\/?!]/g, "");
+            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"\/?!]/g, "");
             formStore.setValue(trimmedLabel, newValue);
             break;
         case "Numbers":
