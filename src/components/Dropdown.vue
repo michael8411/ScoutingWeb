@@ -12,25 +12,40 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch } from 'vue';
+<script lang = 'ts' setup>
+import { ref, watch, defineProps, defineEmits, PropType } from 'vue';
 
 const props = defineProps({
   modelValue: {
     type: String,
     default: 'Default',
   },
-  options: Object,
+  options:{
+    type: Object as PropType<{ choices: string[] }>,
+    default: () => ({ choices: [] }),
+  },
   reset: {
     type: Boolean,
     default: false,
   },
 });
 
-const selectDropdown = ref(null);
+const selectDropdown = ref<HTMLSelectElement | null>(null);
+
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: string): void;
+}>();
+
+function updateValue(event: Event){
+  const target = event.target as HTMLSelectElement;
+  emit('update:modelValue', target.value);
+}
 
 function resetSelection() {
-  selectDropdown.value.selectedIndex = 0;
+  if(selectDropdown.value instanceof HTMLSelectElement){
+    selectDropdown.value.selectedIndex = 0;
+  }
+  return;
 }
 
 watch(() => props.reset, (value) => {

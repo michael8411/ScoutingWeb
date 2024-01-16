@@ -1,8 +1,8 @@
-<script setup>
+<script lang="ts" setup>
 const props = defineProps({
   label: { type: String, required: false },
   href: { type: String, required: false },
-  onClick: { type: Function, required: false }
+  onClick: { type: Function, required: false },
 });
 </script>
 
@@ -20,7 +20,6 @@ const props = defineProps({
   background-color: #009200;
   border: 2px solid #232b2b;
   border-radius: 8px;
-  box-sizing: border-box;
   color: #111;
   cursor: pointer;
   display: flex;

@@ -11,9 +11,9 @@
     </div>
 </template>
   
-<script setup>
+<script lang="ts" setup>
 import { ref, watch, onMounted } from "vue";
-import { useFormStore } from "../state_management/formStore.ts";
+import { useFormStore } from "../state_management/formStore";
 
 const formStore = useFormStore();
 
@@ -53,13 +53,14 @@ watch(inputText, (newValue) => {
     handleFilterFile(newValue);
 });
 
-function countTextFields() {
-    var count = 0;
-    for (var i = 0; i < textFields.length; i++) {
-        count++;
-    }
-    return count;
-}
+// function countTextFields() {
+//     var count = 0;
+//     for (var i = 0; i < textFields.length; i++) {
+//         count++;
+//     }
+//     return count;
+// }
+
 function resetField() {
     switch (props.resetBehavior) {
         case "preserve":
@@ -76,18 +77,19 @@ function resetField() {
     }
 }
 
-function handleMaxLength(newValue) {
+function handleMaxLength(newValue: string){
     const maxLength = props.maxlength;
+    const lengthLabel = document.getElementById(labelId) as HTMLLabelElement;
 
     if (newValue.length === maxLength) {
         inputText.value = newValue.toUpperCase();
-        document.getElementById(labelId).style.color = "red";
+        lengthLabel.style.color = "red";
     } else {
-        document.getElementById(labelId).style.color = "var(--color-text)";
+        lengthLabel.style.color = "var(--color-text)";
     }
 }
 
-function handleFilterFile(newValue) {
+function handleFilterFile(newValue: string) {
     const filterFile = props.filterFile;
 
     if (filterFile) {
@@ -103,7 +105,7 @@ function handleFilterFile(newValue) {
     }
 }
 
-function handleConstraints(constraints, newValue) {
+function handleConstraints(constraints: string, newValue: string) {
     switch (constraints) {
         case "Initials":
             validateInitials(newValue);
@@ -126,7 +128,8 @@ function handleConstraints(constraints, newValue) {
     }
 }
 
-function validateInitials(newValue) {
+function validateInitials(newValue: string) {
+    const lengthLabel = document.getElementById(labelId) as HTMLLabelElement;
     if (!/^[a-zA-Z]*$/.test(newValue)) {
         inputText.value = newValue.slice(0, -1);
     }
@@ -138,13 +141,13 @@ function validateInitials(newValue) {
         formStore.setValue(trimmedLabel, "");
         validationStatusMessage = invalidMessage;
     } else {
-        document.getElementById(labelId).style.color = "var(--color-text)";
+        lengthLabel.style.color = "var(--color-text)";
         formStore.setValue(trimmedLabel, newValue);
         validationStatusMessage = validMessage;
     }
 }
 
-function getValidationMessage(newValue) {
+function getValidationMessage(newValue: string) {
     return newValue.length === 0 ? "" : invalidMessage;
 }
 </script>

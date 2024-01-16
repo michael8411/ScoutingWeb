@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue';
 import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 import optionsJSON from '../data/options.json';
@@ -45,9 +45,19 @@ import teamsJSON from '../data/teams.json';
 import TextField from '../components/TextField.vue';
 import Dropdown from '../components/Dropdown.vue';
 import Button from '../components/Button.vue';
-import { useFormStore } from '../state_management/formStore.ts';
-import database from '../main.ts';
-import router from '../router/index.ts'
+import { useFormStore } from '../state_management/formStore';
+import database from '../main';
+import router from '../router/index'
+
+interface TextFieldConfig{
+  class: string;
+  constraints: string;
+  label: string;
+  maxlength: number;
+  resetBehavior?: string;
+  filterFile?: string[];
+}
+
 const formStore = useFormStore();
 const resetVal = ref(false);
 const optionList = ref(optionsJSON);
@@ -91,30 +101,34 @@ const additionalTextFields = [
 ];
 
 onMounted(() => {
-  optionList.value.forEach(option => {
+  optionList.value.forEach((option: { optionLabel: string }) => {
     formStore.setValue(option.optionLabel, '');
   });
 });
-function onChange(event, key) {
-  formStore.setValue(key, event.target.value);
+
+function onChange(event: Event, key: string) {
+  const target = event.target as HTMLInputElement;
+  formStore.setValue(key, target.value);
 }
 function toggleReset() {
   resetVal.value = true;
 }
 function onClick() {
+  let popup: HTMLElement | null = document.getElementById("invalid-popup");
   for (const [key, value] of formStore.submissionData.entries()) {
-    var popup = document.getElementById("invalid-popup");
     if (value === "" && key != "Additional Comments") {
-      popup.innerHTML = key + " is Invalid";
-      popup.classList.remove("hide");
-      window.scrollTo(0, document.body.scrollHeight);
+      if(popup){
+        popup.innerHTML = key + " is Invalid";
+        popup.classList.remove("hide");
+        window.scrollTo(0, document.body.scrollHeight);
+      }   
       break;
     }
     else {
-      popup.classList.add("hide");
+      popup?.classList.add("hide");
     }
   }
-  if (popup.className === "hide") {
+  if (popup?.className === "hide") {
     addMatchToDatabase();
     toggleReset();
   }
@@ -123,7 +137,10 @@ async function addMatchToDatabase() {
   try {
     let submitMap = {};
     formStore.submissionData.forEach((value, key) => {
-      submitMap[key] = value
+      const submitMap: Record<string, any> = {};
+      formStore.submissionData.forEach((value: any, key: string) => {
+        submitMap[key] = value;
+      });
     });
 
     const matchNumString = "match" + formStore.submissionData.get('Match Number');
