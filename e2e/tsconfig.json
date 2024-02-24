@@ -2,5 +2,13 @@
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
     "./**/*"
-  ]
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "types": [
+      "node"
+    ],
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0"
+  }
 }

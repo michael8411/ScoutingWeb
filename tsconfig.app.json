@@ -5,6 +5,7 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
@@ -27,6 +28,9 @@
     "src/test.ts",
     "src/**/*.spec.ts"
   ],
-  "files": [],
+  "files": [
+    "src/main.ts",
+    
+],
   "references": []
 }

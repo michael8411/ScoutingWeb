@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 
-export const useFormStore = defineStore({
-  id: 'formStore',
-
+export const useFormStore = defineStore('formStore', {
   state: () => ({
     submissionData: new Map(),
   }),
@@ -20,5 +18,14 @@ export const useFormStore = defineStore({
     clearValues() {
       this.submissionData.clear();
     },
+    reset() {
+      this.submissionData.clear();
+    },
+    validate() {
+      for (const [key, value] of this.submissionData.entries()) {
+        if (!value) return false;
+      }
+      return true;
+    }
   },
 });

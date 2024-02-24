@@ -16,7 +16,7 @@ const sheets = google.sheets({
     serviceAccount.client_email,
     undefined,
     serviceAccount.private_key,
-    SCOPES
+    SCOPES,
   ),
 });
 

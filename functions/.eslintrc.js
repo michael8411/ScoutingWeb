@@ -14,8 +14,10 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
+    project: ["./tsconfig.json"],
     sourceType: "module",
+    ecmaVersion: 2020,
+    tsconfigRootDir: __dirname, // Add this line
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
@@ -27,6 +29,17 @@ module.exports = {
   rules: {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
+    "linebreak-style": ["error", "windows"],
     "indent": ["error", 2],
+    // Add or adjust rules as needed
+    "@typescript-eslint/no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
+    // Example rule
+  },
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
 };

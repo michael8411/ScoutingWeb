@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import LoginView from '../views/Login.vue';
-import ScoutingView from '../views/Scouting.vue';
-import SignUpView from '../views/SignUp.vue';
+import LoginView from '../views/LoginPage.vue';
+import ScoutingView from '../views/ScoutingPage.vue';
+
 
 const routes = [
     {
@@ -21,11 +21,6 @@ const routes = [
         meta: {
             requiresAuth: true
         }
-    },
-    {
-        path: '/signup',
-        name: 'SignUp',
-        component: SignUpView,
     },
     {
         path: '/:catchAll(.*)',

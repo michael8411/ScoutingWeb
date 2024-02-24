@@ -11,5 +11,7 @@
     "types": [
       "node"
     ],
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0"
   }
 }

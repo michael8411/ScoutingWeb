@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "noImplicitReturns": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -8,10 +9,19 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es6",
+    "lib": [
+      "es2018"
+    ]
   },
   "compileOnSave": true,
   "include": [
-    "src"
+    "src/**/*.ts",
+    ".eslintrc.js"
+    
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

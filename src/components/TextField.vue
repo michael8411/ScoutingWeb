@@ -1,157 +1,154 @@
 <template>
-    <div>
-        <label>{{ labelId }}</label>
-        <form>
-            <input onkeypress="return event.keyCode != 13" :title="props.title" id="textField" :maxlength="props.maxlength"
-                :filterFile="props.filterFile" v-model="inputText" />
-            <label class="maxChar" :id="labelId">
-                {{ inputText.length }}/{{ props.maxlength }}
+    <div :class="classProp">
+        <label>{{ label }}</label>
+        <form @submit.prevent>
+            <input :title="title" :maxlength="maxlength" v-model="inputText" @input="handleInput"
+                @keypress="handleKeypress" />
+            <label class="maxChar">
+                {{ inputText.length }}/{{ maxlength }}
             </label>
         </form>
+        <p>{{ validationStatusMessage }}</p>
     </div>
 </template>
   
-<script lang="ts" setup>
-import { ref, watch, onMounted } from "vue";
+<script setup lang="ts">
+import { ref, watch, onMounted, defineProps } from "vue";
 import { useFormStore } from "../state_management/formStore";
 
+type TextFieldProps = {
+    class: string;
+    label: string;
+    filterFile?: string[];
+    maxlength?: number;
+    title?: string;
+    constraints?: string;
+    initialValue?: string;
+    reset?: boolean;
+    resetBehavior?: string;
+};
+
+const classProp = defineProps<TextFieldProps>().class;
+const label = defineProps<TextFieldProps>().label;
+const filterFile = defineProps<TextFieldProps>().filterFile;
+const maxlength = defineProps<TextFieldProps>().maxlength || 100;
+const title = defineProps<TextFieldProps>().title;
+const constraints = defineProps<TextFieldProps>().constraints;
+const initialValue = defineProps<TextFieldProps>().initialValue || "";
+const reset = defineProps<TextFieldProps>().reset;
+const resetBehavior = defineProps<TextFieldProps>().resetBehavior;
+
 const formStore = useFormStore();
+const inputText = ref(initialValue);
+const validationStatusMessage = ref("");
 
-const props = defineProps({
-    class: { type: String, default: "", required: true },
-    label: { type: String, required: true },
-    filterFile: { type: Array, required: false },
-    maxlength: { type: Number, default: 100, required: false },
-    title: { type: String, default: "", required: false },
-    constraints: { type: String, default: "", required: false },
-    initialValue: { type: String, default: "", required: false },
-    reset: { type: Boolean, default: false, required: false },
-    resetBehavior: { type: String, default: "default", required: false },
-});
-
-const labelId = props.label;
-const trimmedLabel = labelId.replace(":", "").trim();
-const invalidMessage = `Invalid ${trimmedLabel}   `;
-const validMessage = `Valid ${trimmedLabel}   `;
-
-const inputText = ref(props.initialValue);
 onMounted(() => {
-    formStore.setValue(trimmedLabel, props.initialValue);
+    formStore.setValue(label.replace(":", "").trim(), initialValue);
 });
 
-let validationStatusMessage = "";
-
-watch(() => props.reset, (value) => {
-    if (value) {
-        resetField();
-    }
+watch(() => reset, (newVal) => {
+    if (newVal) resetField();
 });
 
 watch(inputText, (newValue) => {
-    handleConstraints(props.constraints, newValue);
+    handleConstraints(newValue);
     handleMaxLength(newValue);
     handleFilterFile(newValue);
+    updateFormStore(newValue);
 });
 
-// function countTextFields() {
-//     var count = 0;
-//     for (var i = 0; i < textFields.length; i++) {
-//         count++;
-//     }
-//     return count;
-// }
+function handleInput(event: Event) {
+    const target = event.target as HTMLInputElement;
+    applyConstraints(target.value);
+}
+
+function handleKeypress(event: KeyboardEvent) {
+    if (event.key === 'Enter') event.preventDefault();
+}
+
+function handleConstraints(newValue: string) {
+    switch (constraints) {
+        case "Initials":
+            inputText.value = validateInitials(newValue);
+            break;
+        case "Letters":
+            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
+            break;
+        case "Text":
+            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, "");
+            break;
+        case "Numbers":
+            inputText.value = newValue.replace(/\D/g, "");
+            break;
+        default:
+            inputText.value = newValue;
+    }
+}
+
 
 function resetField() {
-    switch (props.resetBehavior) {
+    switch (resetBehavior) {
         case "preserve":
-            // Do not reset the field
             break;
         case "increment":
             inputText.value = (parseInt(inputText.value) + 1).toString();
-            formStore.setValue(trimmedLabel, inputText.value);
             break;
         default:
             inputText.value = "";
-            formStore.setValue(trimmedLabel, "");
-            validationStatusMessage = "";
+    }
+    updateFormStore(inputText.value);
+}
+
+function applyConstraints(newValue: string) {
+    switch (constraints) {
+        case "Initials":
+            inputText.value = validateInitials(newValue);
+            break;
+        case "Letters":
+            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
+            break;
+        case "Text":
+            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, "");
+            break;
+        case "Numbers":
+            inputText.value = newValue.replace(/\D/g, "");
+            break;
+        default:
+            inputText.value = newValue;
     }
 }
 
-function handleMaxLength(newValue: string){
-    const maxLength = props.maxlength;
-    const lengthLabel = document.getElementById(labelId) as HTMLLabelElement;
-
-    if (newValue.length === maxLength) {
+function handleMaxLength(newValue: string) {
+    if (newValue.length === maxlength) {
         inputText.value = newValue.toUpperCase();
-        lengthLabel.style.color = "red";
+        const lengthLabel = document.getElementById(label.replace(":", "").trim()) as HTMLLabelElement;
+        if (lengthLabel) {
+            lengthLabel.style.color = "red";
+        }
     } else {
-        lengthLabel.style.color = "var(--color-text)";
-    }
-}
-
-function handleFilterFile(newValue: string) {
-    const filterFile = props.filterFile;
-
-    if (filterFile) {
-        const isValueValid = filterFile.includes(newValue);
-
-        if (isValueValid) {
-            formStore.setValue(trimmedLabel, newValue);
-            validationStatusMessage = validMessage;
-        } else {
-            formStore.setValue(trimmedLabel, "");
-            validationStatusMessage = getValidationMessage(newValue);
+        const lengthLabel = document.getElementById(label.replace(":", "").trim()) as HTMLLabelElement;
+        if (lengthLabel) {
+            lengthLabel.style.color = "var(--color-text)";
         }
     }
 }
 
-function handleConstraints(constraints: string, newValue: string) {
-    switch (constraints) {
-        case "Initials":
-            validateInitials(newValue);
-            break;
-        case "Letters":
-            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"\/?!]/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        case "Numbers":
-            inputText.value = newValue.replace(/\D/g, "");
-            formStore.setValue(trimmedLabel, newValue);
-            break;
-        default:
-            formStore.setValue(trimmedLabel, newValue);
-            break;
+function handleFilterFile(newValue: string) {
+    if (filterFile && !filterFile.includes(newValue)) {
+        validationStatusMessage.value = `Invalid ${label}`;
+    } else {
+        validationStatusMessage.value = `Valid ${label}`;
     }
 }
 
 function validateInitials(newValue: string) {
-    const lengthLabel = document.getElementById(labelId) as HTMLLabelElement;
-    if (!/^[a-zA-Z]*$/.test(newValue)) {
-        inputText.value = newValue.slice(0, -1);
-    }
-
-    if (newValue.length === 0) {
-        formStore.setValue(trimmedLabel, "");
-        validationStatusMessage = "";
-    } else if (newValue.length < 2) {
-        formStore.setValue(trimmedLabel, "");
-        validationStatusMessage = invalidMessage;
-    } else {
-        lengthLabel.style.color = "var(--color-text)";
-        formStore.setValue(trimmedLabel, newValue);
-        validationStatusMessage = validMessage;
-    }
+    return /^[a-zA-Z]*$/.test(newValue) ? newValue : newValue.slice(0, -1);
 }
 
-function getValidationMessage(newValue: string) {
-    return newValue.length === 0 ? "" : invalidMessage;
+function updateFormStore(value: string) {
+    formStore.setValue(label.replace(":", "").trim(), value);
 }
 </script>
-
 
 <style scoped>
 .maxChar {
@@ -167,7 +164,7 @@ form {
     justify-content: center;
 }
 
-#textField {
+input {
     position: relative;
     border: none;
     background-color: var(--color-background);

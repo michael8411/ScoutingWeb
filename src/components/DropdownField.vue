@@ -1,8 +1,8 @@
 <template>
   <div class="custom-select">
-    <select ref="selectDropdown" @change="updateValue" class="custom-dropdown">
-      <option class="option" value="Default" disabled selected>Select your option</option>
-      <option v-for="choice in options.choices" :value="choice">
+    <select @change="updateValue" class="custom-dropdown">
+      <option disabled selected>Select your option</option>
+      <option v-for="(choice, index) in props.options" :key="index" :value="choice">
         {{ choice }}
       </option>
     </select>
@@ -12,47 +12,20 @@
   </div>
 </template>
 
-<script lang = 'ts' setup>
-import { ref, watch, defineProps, defineEmits, PropType } from 'vue';
+<script setup lang="ts">
+import { ref, defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: 'Default',
-  },
-  options:{
-    type: Object as PropType<{ choices: string[] }>,
-    default: () => ({ choices: [] }),
-  },
-  reset: {
-    type: Boolean,
-    default: false,
-  },
+  modelValue: String,
+  options: Array
 });
 
-const selectDropdown = ref<HTMLSelectElement | null>(null);
+const emit = defineEmits(['update:modelValue']);
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: string): void;
-}>();
-
-function updateValue(event: Event){
-  const target = event.target as HTMLSelectElement;
-  emit('update:modelValue', target.value);
-}
-
-function resetSelection() {
-  if(selectDropdown.value instanceof HTMLSelectElement){
-    selectDropdown.value.selectedIndex = 0;
-  }
-  return;
-}
-
-watch(() => props.reset, (value) => {
-  if (value) {
-    resetSelection();
-  }
-});
+const updateValue = (event: Event) => {
+  const newValue = (event.target as HTMLSelectElement).value;
+  emit('update:modelValue', newValue);
+};
 </script>
   
   
@@ -86,6 +59,8 @@ watch(() => props.reset, (value) => {
   -moz-appearance: none;
   text-justify: center;
 }
+
+
 
 .custom-select select::-ms-expand {
   display: none;
