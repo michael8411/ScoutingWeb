@@ -4,12 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <div :class="{
-        'mobile-view': isMobile,
-        'tablet-view': isTablet,
-        'laptop-view': isLaptop,
-        'desktop-view': isDesktop
-    }">
+    <div :class="breakpoint">
+
         <div id="background"></div>
         <div id="base">
             <div id="gradient"></div>
@@ -18,10 +14,9 @@
                 <img id="team-logo" src="../assets/images/cryptonite_logo.png" alt="Cryptonite Logo">
             </header>
             <!-- Main Content Section -->
-            <main id="main-content">
+    
                 <div class="container">
                     <div id="login-section">
-                        <!-- Navigation for Sign In/Sign Up -->
                         <div class="nav">
                             <ul class="links">
                                 <li :class="{ 'signin-active': isSignIn }" @click="toggleForm(true)">
@@ -56,8 +51,9 @@
                                 <!-- Action Buttons for Sign In -->
                                 <div id="auth-buttons">
                                     <StyledButton label="Login" :onClick="handleEmailSignIn"></StyledButton>
-                                    <div id="alt-login-divider"><span>OR</span></div>
-                                    <StyledButton label="Continue with Katy ISD" :onClick="handleGoogleSignIn"></StyledButton>
+                                    <div id="alt-login-divider"><span></span></div>
+                                    <StyledButton label="Continue with Katy ISD" :onClick="handleGoogleSignIn">
+                                    </StyledButton>
                                 </div>
 
                                 <!-- Account Links for Sign In -->
@@ -76,7 +72,7 @@
                                     <div class="error-space">{{ computedEmailError }}</div>
                                 </fieldset>
 
-                                <!-- Password Input Group for Sign In -->
+                                <!-- Password Input Group for Sign Up -->
                                 <fieldset class="form-group">
                                     <label for="signup-password" class="form-label">Password</label>
                                     <input type="password" id="signup-password" class="form-input"
@@ -84,19 +80,12 @@
                                     <div class="error-space">{{ computedPasswordError }}</div>
                                 </fieldset>
 
-                                <!-- Action Buttons for Sign In -->
+                                <!-- Action Buttons for Sign Up -->
                                 <div id="auth-buttons">
+                                    <div id="alt-login-divider"><span></span></div>
                                     <StyledButton label="Register" :onClick="handleEmailSignIn"></StyledButton>
-                                    <div id="alt-login-divider"><span>OR</span></div>
-                                    <StyledButton label="Continue with Katy ISD" :onClick="handleGoogleSignIn">
-                                    </StyledButton>
+                                    
                                 </div>
-
-                                <!-- Account Links for Sign In -->
-                                <nav id="account-links">
-
-                                    <router-link to="/reset" class="link-style">Forgot Password?</router-link>
-                                </nav>
                             </form>
 
                         </div>
@@ -107,7 +96,7 @@
                 <aside id="graphic">
                     <img id="glitch_logo" src="../assets/gifs/glitchSlow.gif" alt="Glitch Logo">
                 </aside>
-            </main>
+       
         </div>
     </div>
 </template>
@@ -123,7 +112,6 @@ import { FirebaseError } from '@firebase/util';
 import { useBreakpoints } from '../composables/useBreakpoints';
 
 
-
 // Define reactive state
 const isSignIn = ref(true);
 
@@ -133,13 +121,8 @@ const { signInWithEmail, signInWithGoogle, authError, getErrorMessage, clearAuth
 const router = useRouter();
 
 // Breakpoints composable - responsive design constants
-const breakpoints = {
-    mobile: 450,
-    tablet: 900,
-    laptop: 1250,
-    desktop: Infinity,
-};
-const { isMobile, isTablet, isLaptop, isDesktop } = useBreakpoints(breakpoints);
+
+const { breakpoint } = useBreakpoints();
 
 // Auth Error Handling
 watch([email, password], () => {
@@ -213,7 +196,7 @@ const handleGoogleSignIn = async () => {
 .frame {
     display: grid;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
     width: 100%;
     height: 100%;
@@ -223,7 +206,11 @@ const handleGoogleSignIn = async () => {
 
 /* Container Styles */
 .container {
+
+
+
     height: 100%;
+    width: 50%;
 }
 
 /* Authentication Section Styles */
@@ -232,7 +219,6 @@ const handleGoogleSignIn = async () => {
     position: absolute;
     width: 100%;
     height: fit-content;
-    padding-left: 1vh;
     will-change: transform, opacity;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -343,7 +329,7 @@ const handleGoogleSignIn = async () => {
     display: flex;
     flex-direction: row;
     list-style: none;
-    gap: 2.5vh;
+    gap: 40px;
     padding: 0;
     font-family: 'Lemon/Milk', 'Futura PT';
     font-size: 22px;
@@ -399,6 +385,7 @@ const handleGoogleSignIn = async () => {
     z-index: 2;
     margin-top: 10%;
     margin-left: 10%;
+    display: none;
 }
 
 /* Header Styling */
@@ -419,33 +406,56 @@ const handleGoogleSignIn = async () => {
     justify-content: center;
     padding-left: 3%;
     padding-right: 3%;
-    gap: 15%;
+    gap: 0%;
     min-height: fit-content;
     align-items: center;
 }
 
 /* Login Section Styling */
 #login-section {
-
+    position: absolute;
+    padding-left: 10vw ;
+    padding-right: 10vw;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    width: 95%;
-    height: 60vh;
-    min-height: fit-content;
-    min-width: 100px;
-    border-radius: 30px;
-    --x: 50%;
-    --y: 50%;
-    border: 3px solid transparent;
-    transition: background-position 0.3s, border-color 0.3s;
-    background: linear-gradient(#010101, #000000) padding-box, radial-gradient(farthest-corner at var(--x) var(--y), #616161, #0e0e0e) border-box;
-    scale: 0.9;
-    object-fit: scale-down;
+    width: 100%;
+    height: 100%;
+    border-radius: 40px 10px 10px 40px;
+    transform-origin: top left;
     position: relative;
     overflow: hidden;
+    border: 3px solid transparent;
+    border-right: 4px transparent;
+    transition: background-position 0.3s, border-color 0.3s;
+    z-index: 1;
+    object-fit: cover;
+    background-color: rgba(0, 0, 0, 0.45);
+    ;
+
 }
+#login-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
+    background: url("D:\WebScouting2024\ScoutingWeb\src\assets\images\grdz.png") rgb(10, 10, 10) 100% / cover no-repeat;
+    filter: blur(90px) brightness(60%);
+    z-index: 0; /* Ensure it stays behind the content */
+}
+
+
+#login-section > * {
+    position: relative;
+    z-index: 1; /* Ensure they are above the pseudo-element */
+}
+
 
 /* Login Title Styling */
 #login-title {
@@ -565,12 +575,13 @@ label {
 #alt-login-divider {
     position: relative;
     text-align: center;
-    width: 100%;
+    width: 99%;
     color: #8b8b94;
+    background-color: transparent;
 }
 
 #alt-login-divider span {
-    background-color: rgb(3, 3, 3);
+    background-color: rgba(255, 255, 255, 0);
     padding-left: 12px;
     padding-right: 12px;
     display: inline-block;
@@ -597,25 +608,40 @@ label {
 
 /* Graphic Styling */
 #graphic {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    max-height: 60%;
-    height: 50vh;
+    height: 100%;
+    width: 50%;
     background-color: black;
     justify-content: center;
     align-items: center;
-    border-radius: 30px;
+    border-radius: 40px;
     --x: 50%;
     --y: 50%;
     border: 3px solid transparent;
     transition: background-position 0.3s, border-color 0.3s;
-    background: linear-gradient(#000000, #000000) padding-box, radial-gradient(farthest-corner at var(--x) var(--y), #616161, #0e0e0e) border-box;
-    max-width: 500px;
-    max-height: 800px;
+    border-color: linear-gradient(#0b0b0b, #070707) padding-box,
+        radial-gradient(farthest-corner at var(--x) var(--y), #848484, #020202) border-box;
+    border-top: none;
+    border-right: none;
+    border-bottom:none transparent;
+    border-left: solid 2px transparent;
+    overflow: none;
+    border-radius: 0px 30px 30px 0px;
 }
 
 #glitch_logo {
-    width: 100%;
+    
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    max-width: 100%; 
+    max-height: 100%;
+    width: auto; 
+    height: auto; 
 }
 
 /* Error Message Styling */
@@ -664,7 +690,9 @@ Button {
 
 #base {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
     height: 90vh;
     min-height: fit-content;
     width: 90vw;
@@ -740,8 +768,7 @@ Button {
 
 .mobile-view .frame {
     justify-content: center;
-    align-items: center;
-    margin-bottom: 100%;
+    margin-top: 10%;
 }
 
 .mobile-view #login-section {
@@ -758,17 +785,13 @@ Button {
 
     box-sizing: border-box;
     overflow-y: auto;
+    padding: 10vw;
 }
 
 .mobile-view #auth-section,
 .mobile-view #register-section {
     height: 10%;
     align-items: center;
-}
-
-.mobile-view .nav {
-    padding-left: 1vh;
-
 }
 
 .mobile-view .form-group {
@@ -843,11 +866,6 @@ Button {
 
 }
 
-.tablet-view .nav {
-    padding-left: 1vh;
-
-}
-
 .tablet-view .frame {
     height: 100%;
     width: 100%;
@@ -870,7 +888,6 @@ Button {
 }
 
 .tablet-view #account-links {
-    padding-top: 1vh;
     gap: 5vh;
 }
 
@@ -883,7 +900,7 @@ Button {
 
 .laptop-view #login-section {
     width: 90%;
-    height: clamp(60vh, 80vh, 800px);
+    /* height: clamp(60vh, 80vh, 800px); */
     border-radius: 30px;
     display: flex;
     flex-direction: column;
@@ -894,11 +911,6 @@ Button {
 
 .laptop-view #login-section>* {
     transform: scale(0.8);
-}
-
-
-.laptop-view .nav {
-    padding-left: 1vh;
 }
 
 .laptop-view .container {
@@ -929,20 +941,21 @@ Button {
 
 }
 
+/* Desktop View */
 .desktop-view #team-logo {
     height: 65px;
     margin-top: 5%;
     margin-left: 5%;
 }
-/* Desktop View */
+
 .desktop-view .nav {
-    padding-left: 1vh;
+    /* padding-left: 1vh; */
     padding-top: 20%;
 
 }
 
 .desktop-view #base {
-    height: 80vh;
+    height: 90vh;
     width: 90vw;
 }
 
@@ -953,20 +966,26 @@ Button {
     align-items: center;
     height: 70%;
     width: fit-content;
+    transform-origin: top left;
 }
 
 .desktop-view #main-content {
-    gap: 15%;
+    gap: 5%;
 }
 
 .desktop-view #login-section {
-    width: 650px;
-    height: 85vh;
+
+    height: 100%;
     border-radius: 30px;
-    min-height: 300px;
-    max-height: 750px;
+
+    backdrop-filter: blur(10px);
     padding-left: 15%;
     padding-right: 15%;
-    overflow-y: auto;
+  
 }
+
+
+
+
+
 </style> 

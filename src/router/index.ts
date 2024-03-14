@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import LoginView from '../views/LoginPage.vue';
 import ScoutingView from '../views/ScoutingPage.vue';
+import SheetsView from '../views/SheetsPage.vue';
+import AdminView from '../views/AdminPage.vue';
 
 
 const routes = [
@@ -18,6 +20,22 @@ const routes = [
         path: '/scouting',
         name: 'Scouting',
         component: ScoutingView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/sheets',
+        name: 'Sheets',
+        component: SheetsView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: AdminView,
         meta: {
             requiresAuth: true
         }

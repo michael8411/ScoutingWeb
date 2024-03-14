@@ -1,4 +1,5 @@
 <template>
+  <NavDrawer/>
   <div class="scouting-container">
     <header class="header">
       <div class="logo-logout">
@@ -20,6 +21,10 @@
       <Button @click="onClick" label="Submit to Database" />
       <h2 class="invalid-popup hide">INVALID INFORMATION</h2>
     </main>
+    <iframe src="https://docs.google.com/spreadsheets/d/15giJVkuOy0v2wKyAy-2l3TfwOa-nRj0uLQra-LScbJo/edit#gid=0"
+      width=400 height=400 frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
   </div>
 </template>
 
@@ -30,9 +35,10 @@ import TextField from '../components/TextField.vue';
 import Dropdown from '../components/DropdownField.vue';
 import Button from '../components/StyledButton.vue';
 import { useFormStore } from '../state_management/formStore';
-import database from '../main'; // Assuming 'main.js' is in the 'src' directory
+import database from '../main';
 import router from '../router/index';
 import teamsJSON from '../data/teams.json';
+import NavDrawer from '../components/NavDrawer.vue';
 
 interface ComponentConfig {
   type: typeof TextField | typeof Dropdown;
@@ -43,16 +49,7 @@ const formStore = useFormStore();
 const resetVal = ref(false);
 
 const components = ref<ComponentConfig[]>([
-  {
-    type: TextField,
-    props: {
-      class: 'match-number-textfield',
-      constraints: 'Numbers',
-      label: 'Match Number:',
-      maxlength: 3,
-      resetBehavior: 'increment',
-    }
-  },
+
   {
     type: Dropdown,
     props: {
@@ -107,12 +104,12 @@ watch(resetVal, (newValue) => {
 </script>
 
   
-<style>
+<style scoped>
 :root {
   --option-grid-gap: 20px;
 }
 
-#logo {
+.logo {
   max-width: 20%;
   height: 20%;
   margin-right: auto;
@@ -148,13 +145,13 @@ watch(resetVal, (newValue) => {
   font-size: calc(100% + 1.8vw);
 }
 
-#logo-logout {
+.logo-logout {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-#logout {
+.logout {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -168,7 +165,7 @@ watch(resetVal, (newValue) => {
   height: 100%;
 }
 
-#logout-text {
+.logout-text {
   max-width: 100%;
   font-size: 2vw;
   filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
@@ -176,13 +173,25 @@ watch(resetVal, (newValue) => {
   font-family: 'Lemon/Milk';
 }
 
-#logout-image {
+.logout-image {
   max-width: 25%;
   height: 20%;
   pointer-events: none;
   filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.logout-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
 #options {

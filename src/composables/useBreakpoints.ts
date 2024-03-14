@@ -1,8 +1,16 @@
 // src/composables/useBreakpoints.ts
-import { ref, onMounted, onUnmounted, computed, ComputedRef, watch } from 'vue';
-import { Breakpoints } from '../types/breakpoints';
+import { ref, onMounted, onUnmounted, computed, ComputedRef } from 'vue';
 
-export function useBreakpoints(breakpoints: Breakpoints) {
+// Define the breakpoints
+const breakpoints = {
+    xs: 420,
+    sm: 767,
+    md: 768,
+    lg: 1024,
+    xl: 1600
+};
+
+export function useBreakpoints() {
     const width = ref(window.innerWidth);
 
     const onWidthChange = () => {
@@ -17,18 +25,19 @@ export function useBreakpoints(breakpoints: Breakpoints) {
         window.removeEventListener('resize', onWidthChange);
     });
 
-    const isMobile: ComputedRef<boolean> = computed(() => width.value <= breakpoints.mobile);
-    const isTablet: ComputedRef<boolean> = computed(() => width.value > breakpoints.mobile && width.value <= breakpoints.tablet);
-    const isLaptop: ComputedRef<boolean> = computed(() => width.value > breakpoints.tablet && width.value <= breakpoints.laptop);
-    const isDesktop: ComputedRef<boolean> = computed(() => width.value > breakpoints.laptop);
-    const updateCSSVariables = () => {
-        const rootStyle = document.documentElement.style;
-        rootStyle.setProperty('--login-section-width', isMobile.value ? '90%' : isTablet.value ? '80%' : isLaptop.value ? '70%' : '35%');
-    };
+    const breakpoint = computed(() => {
+        if (width.value <= breakpoints.xs) return 'xs';
+        if (width.value <= breakpoints.sm) return 'sm';
+        if (width.value <= breakpoints.md) return 'md';
+        if (width.value <= breakpoints.lg) return 'lg';
+        return 'xl';
+    });
 
-    watch([isMobile, isTablet, isLaptop, isDesktop], () => {
-        updateCSSVariables();
-    }, { immediate: true });
+    const xs: ComputedRef<boolean> = computed(() => breakpoint.value === 'xs');
+    const sm: ComputedRef<boolean> = computed(() => breakpoint.value === 'sm');
+    const md: ComputedRef<boolean> = computed(() => breakpoint.value === 'md');
+    const lg: ComputedRef<boolean> = computed(() => breakpoint.value === 'lg');
+    const xl: ComputedRef<boolean> = computed(() => breakpoint.value === 'xl');
 
-    return { width, isMobile, isTablet, isLaptop, isDesktop };
+    return { width, breakpoint, xs, sm, md, lg, xl };
 }
