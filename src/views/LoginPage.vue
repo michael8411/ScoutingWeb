@@ -1,5 +1,6 @@
 
 <template>
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,11 @@
         <div id="background"></div>
         <div id="base">
             <div id="gradient"></div>
-            <!-- Header Section -->
-            <header id="header">
-                <img id="team-logo" src="../assets/images/cryptonite_logo.png" alt="Cryptonite Logo">
-            </header>
+
             <!-- Main Content Section -->
-    
-                <div class="container">
-                    <div id="login-section">
+            <div class="container">
+                <div id="login-frame">
+                    <div class="login-content">
                         <div class="nav">
                             <ul class="links">
                                 <li :class="{ 'signin-active': isSignIn }" @click="toggleForm(true)">
@@ -35,8 +33,8 @@
                                 <!-- Email Input Group for Sign In -->
                                 <fieldset class="form-group">
                                     <label for="signin-email" class="form-label">Email</label>
-                                    <input id="signin-email" class="form-input" type="email" placeholder="Enter your email"
-                                        v-model="email" />
+                                    <input id="signin-email" class="form-input" type="email"
+                                        placeholder="Enter your email" v-model="email" />
                                     <div class="error-space">{{ computedEmailError }}</div>
                                 </fieldset>
 
@@ -67,8 +65,8 @@
                             <form class="form-auth" id="register-section" @submit.prevent="handleEmailSignIn">
                                 <fieldset class="form-group">
                                     <label for="signup-email" class="form-label">Email</label>
-                                    <input id="signup-email" class="form-input" type="email" placeholder="Enter your email"
-                                        v-model="email" />
+                                    <input id="signup-email" class="form-input" type="email"
+                                        placeholder="Enter your email" v-model="email" />
                                     <div class="error-space">{{ computedEmailError }}</div>
                                 </fieldset>
 
@@ -84,19 +82,20 @@
                                 <div id="auth-buttons">
                                     <div id="alt-login-divider"><span></span></div>
                                     <StyledButton label="Register" :onClick="handleEmailSignIn"></StyledButton>
-                                    
+
                                 </div>
                             </form>
 
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Graphic Section -->
-                <aside id="graphic">
-                    <img id="glitch_logo" src="../assets/gifs/glitchSlow.gif" alt="Glitch Logo">
-                </aside>
-       
+            <!-- Graphic Section -->
+            <aside id="graphic">
+                <img id="glitch_logo" src="../assets/images/624Glow.png" alt="Glitch Logo">
+            </aside>
+
         </div>
     </div>
 </template>
@@ -194,23 +193,21 @@ const handleGoogleSignIn = async () => {
 
 /* Frame Styles */
 .frame {
-    display: grid;
-    flex-direction: column;
-    /* align-items: center; */
+    display: flex;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: fit-content;
     -webkit-font-smoothing: subpixel-antialiased;
     will-change: transform, opacity;
 }
 
 /* Container Styles */
 .container {
-
-
-
-    height: 100%;
-    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; 
+    width: 50%; 
 }
 
 /* Authentication Section Styles */
@@ -230,7 +227,6 @@ const handleGoogleSignIn = async () => {
         transform: translateX(100%) translateZ(0);
         opacity: 0;
     }
-
     to {
         transform: translateX(0) translateZ(0);
         opacity: 1;
@@ -242,7 +238,6 @@ const handleGoogleSignIn = async () => {
         transform: translateX(-100%) translateZ(0);
         opacity: 0;
     }
-
     to {
         transform: translateX(0) translateZ(0);
         opacity: 1;
@@ -254,7 +249,6 @@ const handleGoogleSignIn = async () => {
         transform: translateX(0) translateZ(0);
         opacity: 1;
     }
-
     to {
         transform: translateX(-100%) translateZ(0);
         opacity: 0;
@@ -266,11 +260,16 @@ const handleGoogleSignIn = async () => {
         transform: translateX(0) translateZ(0);
         opacity: 1;
     }
-
     to {
         transform: translateX(100%) translateZ(0);
         opacity: 0;
     }
+}
+
+/* State Specific Frame Styles */
+.frame.signin-active,
+.frame.signup-active {
+    height: 500px;
 }
 
 .frame.signin-active #auth-section,
@@ -282,7 +281,7 @@ const handleGoogleSignIn = async () => {
     text-rendering: optimizeLegibility;
 }
 
-/* Active and Inactive State Transitions */
+/* Active State Transitions */
 .frame.signin-active #auth-section {
     animation: slideInFromLeft 0.45s ease-in-out forwards;
 }
@@ -297,23 +296,6 @@ const handleGoogleSignIn = async () => {
 
 .frame.signup-active #auth-section {
     animation: slideOutToLeft 0.45s ease-in-out forwards;
-}
-
-/* Navigation Link Active State */
-.nav .links li.signin-active a.signin-btn,
-.nav .links li.signup-active a.signup-btn {
-    opacity: 1;
-    padding-bottom: 15%;
-
-}
-
-.nav a::after,
-.nav .links li.signin-active a.signin-btn::after,
-.nav .links li.signup-active a.signup-btn::after {
-    background-color: #6b6b6b;
-    width: 100%;
-
-
 }
 
 /* Navigation Styles */
@@ -355,6 +337,19 @@ const handleGoogleSignIn = async () => {
     transition: width .5s ease, background-color .5s ease;
 }
 
+/* Navigation Active State */
+.nav .links li.signin-active a.signin-btn,
+.nav .links li.signup-active a.signup-btn {
+    opacity: 1;
+    padding-bottom: 15%;
+}
+
+.nav .links li.signin-active a.signin-btn::after,
+.nav .links li.signup-active a.signup-btn::after {
+    background-color: #6b6b6b;
+    width: 100%;
+}
+
 /* Root Variables */
 :root {
     --red: hsl(18, 100%, 50%);
@@ -378,22 +373,9 @@ const handleGoogleSignIn = async () => {
     color-scheme: none;
 }
 
-/* Logo Styling */
-/* Logo Styling */
-#team-logo {
-    height: 70px;
-    z-index: 2;
-    margin-top: 10%;
-    margin-left: 10%;
-    display: none;
-}
-
-/* Header Styling */
-#header {
-    display: flex;
-    width: fit-content;
-    height: fit-content;
-}
+/* Logo and Header Styling */
+/* Placeholder for Logo Styles */
+/* Placeholder for Header Styles */
 
 /* Main Content Styling */
 #main-content {
@@ -412,18 +394,18 @@ const handleGoogleSignIn = async () => {
 }
 
 /* Login Section Styling */
-#login-section {
+#login-frame {
     position: absolute;
-    padding-left: 10vw ;
-    padding-right: 10vw;
-    padding-top: 10vh;
-    padding-bottom: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
     border-radius: 40px 10px 10px 40px;
     transform-origin: top left;
     position: relative;
@@ -434,10 +416,9 @@ const handleGoogleSignIn = async () => {
     z-index: 1;
     object-fit: cover;
     background-color: rgba(0, 0, 0, 0.45);
-    ;
-
 }
-#login-section::before {
+
+#login-frame::before {
     content: '';
     position: absolute;
     top: 0;
@@ -445,23 +426,16 @@ const handleGoogleSignIn = async () => {
     right: 0;
     bottom: 0;
     opacity: 0.5;
-    background: url("D:\WebScouting2024\ScoutingWeb\src\assets\images\grdz.png") rgb(10, 10, 10) 100% / cover no-repeat;
-    filter: blur(90px) brightness(60%);
-    z-index: 0; /* Ensure it stays behind the content */
+    background: url("src/assets/images/BlurredBackground.png") rgb(10, 10, 10) 100% / cover no-repeat;
+    filter: blur(5px) brightness(50%);
+    z-index: 0;
 }
-
-
-#login-section > * {
-    position: relative;
-    z-index: 1; /* Ensure they are above the pseudo-element */
-}
-
 
 /* Login Title Styling */
 #login-title {
     display: flex;
     flex-direction: column;
-    align-items: left;
+    align-items: flex-start;
     gap: 20px;
     z-index: 1;
     width: 350px;
@@ -511,7 +485,7 @@ input::placeholder {
 .form-group {
     display: grid;
     grid-gap: 10px;
-    flex-direction: column;
+    grid-template-columns: 1fr;
     font-family: 'Futura PT';
     z-index: 1;
     width: 100%;
@@ -519,12 +493,8 @@ input::placeholder {
     margin-bottom: 20px;
 }
 
-.form-group input:-webkit-autofill,
-.form-group input:-webkit-autofill:hover,
-.form-group input:-webkit-autofill:focus,
 .form-group input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #b7b7b7 inset !important;
-    /* Light gray background */
     box-shadow: 0 0 0 30px #b7b7b7 inset !important;
 }
 
@@ -564,7 +534,7 @@ label {
 /* Account Links Styling */
 #account-links {
     display: grid;
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: center;
     justify-content: center;
     padding-top: 10%;
@@ -577,14 +547,12 @@ label {
     text-align: center;
     width: 99%;
     color: #8b8b94;
-    background-color: transparent;
 }
 
 #alt-login-divider span {
-    background-color: rgba(255, 255, 255, 0);
+    background-color: transparent;
     padding-left: 12px;
     padding-right: 12px;
-    display: inline-block;
     line-height: 24px;
     position: relative;
     z-index: 1;
@@ -614,34 +582,40 @@ label {
     flex-direction: column;
     height: 100%;
     width: 50%;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.45);
     justify-content: center;
     align-items: center;
     border-radius: 40px;
     --x: 50%;
     --y: 50%;
     border: 3px solid transparent;
-    transition: background-position 0.3s, border-color 0.3s;
-    border-color: linear-gradient(#0b0b0b, #070707) padding-box,
-        radial-gradient(farthest-corner at var(--x) var(--y), #848484, #020202) border-box;
-    border-top: none;
-    border-right: none;
-    border-bottom:none transparent;
-    border-left: solid 2px transparent;
-    overflow: none;
     border-radius: 0px 30px 30px 0px;
+    z-index: 1;
+}
+
+#graphic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
+    background: url("src/assets/images/BlurredBackground.png") rgb(10, 10, 10) 60% / cover no-repeat;
+    filter: blur(5px) brightness(50%);
+    z-index: 0;
 }
 
 #glitch_logo {
-    
-    position: absolute; 
+    position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
-    max-width: 100%; 
-    max-height: 100%;
-    width: auto; 
-    height: auto; 
+    transform: translate(-50%, -50%);
+    max-width: 80%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    z-index: 1;
 }
 
 /* Error Message Styling */
@@ -656,7 +630,7 @@ Button {
 }
 
 /* Base Styling */
-
+/* ... */
 
 /* Background Styling */
 #background {
@@ -682,12 +656,12 @@ Button {
     0% {
         --a: 0deg;
     }
-
     100% {
         --a: 360deg;
     }
 }
 
+/* Base Container Styling */
 #base {
     display: flex;
     justify-content: center;
@@ -695,6 +669,7 @@ Button {
     flex-direction: row;
     height: 90vh;
     min-height: fit-content;
+    max-width: 1700px;
     width: 90vw;
     margin: auto;
     border-radius: 40px;
@@ -706,24 +681,20 @@ Button {
     border-right: 1px none transparent;
     border-bottom: 1px none transparent;
     border-left: 4px double transparent;
-    transition: background-position 0.3s, border-color 0.3s;
     background: linear-gradient(#0b0b0b, #070707) padding-box,
         radial-gradient(farthest-corner at var(--x) var(--y), #848484, #020202) border-box;
 }
 
-#base::before,
-#base::after {
+#base::before, #base::after {
     content: '';
     position: absolute;
     border-radius: 42px;
 }
 
 #base::before {
-    width: 100%;
-    height: 100%;
+    top: 0.35vh;
     left: 0.35vh;
     right: 0.35vh;
-    top: 0.35vh;
     bottom: 0.35vh;
     background-image: linear-gradient(var(--a), #000000, #3a3939, #0e0e0e 43%, #0c300c);
     z-index: -2;
@@ -741,251 +712,203 @@ Button {
     opacity: 0.7;
     z-index: -1;
     animation: rotate-gradient 20s linear infinite;
-
 }
 
 #gradient {
     --rotate-angle: 360deg;
     position: absolute;
-    height: calc(100% - 20px);
-    width: calc(100% - 10px);
     top: 20px;
     left: 15px;
+    height: calc(100% - 20px);
+    width: calc(100% - 10px);
     background-image: linear-gradient(var(--rotate-angle), #0e460e, #3a3939, #0e0e0e 43%, #0c300c);
     filter: blur(0.5rem);
     border-radius: 25px;
     opacity: 0.5;
     z-index: -1;
-    transition: filter 0.3s, opacity 0.3s;
     animation: rotate-gradient 20s linear infinite;
 }
 
-/* Mobile View */
 
-.mobile-view #header #team-logo {
+
+/* Extra Small Devices Styling */
+.xs .login-content {
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+.xs #login-frame {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.xs #base {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    background-color: black;
+    border-radius: 0;
+}
+
+.xs #base::before, 
+.xs #base::after {
     display: none;
 }
 
-.mobile-view .frame {
-    justify-content: center;
-    margin-top: 10%;
+.xs #main-content {
+    flex-direction: column;
+    padding: 0;
 }
 
-.mobile-view #login-section {
+.xs #login-title {
+    font-size: 36px;
+    margin-block: 0;
+}
+
+.xs #graphic {
+    display: none;
+}
+
+/* Small Devices Styling */
+.sm .login-content {
+    display: block;
+    width: 100%;
+    height: fit-content;
+}
+
+.sm #login-frame {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    border: none;
+    height: 100%;
+    width: 100%;
+    border-radius: 15px;
     background: none;
-    border-radius: 20px;
+}
+
+.sm #base {
     height: 100%;
     width: 100%;
-
-    box-sizing: border-box;
-    overflow-y: auto;
-    padding: 10vw;
-}
-
-.mobile-view #auth-section,
-.mobile-view #register-section {
-    height: 10%;
-    align-items: center;
-}
-
-.mobile-view .form-group {
-    height: fit-content;
-}
-
-.mobile-view #base {
-    height: 100%;
-    width: 100%;
-    margin: 0px;
-    border: none;
-    border-radius: 0px;
+    margin: 0;
     background-color: black;
+    border-radius: 0;
 }
 
-.mobile-view #base::before,
-.mobile-view #base::after {
-    width: 0;
-    height: 0;
-    background-image: none;
-    filter: none;
-    opacity: 0;
-    animation: none;
-}
-
-.mobile-view #main-content {
-    padding: 0px;
-    width: 40vh;
-}
-
-.mobile-view #login-title {
-    max-width: 350px;
-    width: 80%;
-    font-size: 48px;
-    margin-block-start: 0em;
-    margin-block-end: 0.5em;
-}
-
-.mobile-view #graphic {
+.sm #base::before, 
+.sm #base::after {
     display: none;
 }
 
-
-.mobile-view #main-content {
+.sm #main-content {
     flex-direction: column;
-    gap: 5%;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding: 0;
 }
 
-/* Tablet View */
-.tablet-view #team-logo {
-    height: 70px;
-    margin-top: 7%;
-    margin-left: 7%;
+.sm #login-title {
+    font-size: 42px;
+    margin-block: 0;
 }
 
-.tablet-view #main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.sm #graphic {
+    display: none;
+}
+
+/* Medium Devices Styling */
+.md #login-frame {
+    width: 100vw;
     height: 100%;
-}
-
-.tablet-view #login-section {
-    width: 100%;
-    height: 85vh;
     margin: auto;
-    padding: 5%;
-    border-radius: 25px;
-
+    padding: 4%;
+    border-radius: 20px;
 }
 
-.tablet-view .frame {
-    height: 100%;
+.md .login-content {
+    display: block;
     width: 100%;
-    justify-content: center;
-    background-color: transparent;
+    height: fit-content;
+    scale: 0.9;
 }
 
-.tablet-view .container {
-    display: flex;
+.md #account-links {
+    gap: 4vh;
+}
+
+.md .container {
     width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    transform: scale(0.9);
 }
 
-.tablet-view #graphic {
-    display: none;
+/* Large Devices Styling */
+.lg #login-frame {
+    width: 100%;
+    border-radius: 0px;
 }
 
-.tablet-view #account-links {
-    gap: 5vh;
-}
-
-
-.laptop-view #team-logo {
-    height: 65px;
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.laptop-view #login-section {
-    width: 90%;
-    /* height: clamp(60vh, 80vh, 800px); */
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.laptop-view #login-section>* {
-    transform: scale(0.8);
-}
-
-.laptop-view .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 150rem;
-    height: 90vh;
-    border-radius: 30px;
-    transform: scale(0.8);
-}
-
-.laptop-view #main-content {
-    padding: 3em;
+.lg .container {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: row;
+}
+
+.lg .login-content {
+    display: block;
+    height: fit-content;
+    width: 100%;
+    scale: 0.8;
+}
+
+.lg #account-links {
+    gap: 3vh;
+}
+
+/* Extra Large Devices Styling */
+.xl #graphic {
+    display: block;
+}
+
+.xl .login-content {
+    display: block;
+    height: fit-content;
+    width: 100%;
+    scale: 0.9;
+}
+
+.xl #login-frame {
+    width: 100%;
+    border-radius: 0px;
     justify-content: center;
     align-items: center;
-    gap: 10%;
 }
 
-.laptop-view #graphic {
-    justify-self: center;
-    align-self: center;
-    height: clamp(20vh, 40vh, 800px);
-
+.xl #account-links {
+    gap: 2vh;
 }
 
-/* Desktop View */
-.desktop-view #team-logo {
-    height: 65px;
-    margin-top: 5%;
-    margin-left: 5%;
+/* Extra Extra Large Devices Styling */
+.xxl #login-frame {
+    width: 100%;
 }
 
-.desktop-view .nav {
-    /* padding-left: 1vh; */
-    padding-top: 20%;
-
+.xxl #graphic {
+    display: block;
 }
 
-.desktop-view #base {
-    height: 90vh;
-    width: 90vw;
+.xxl #account-links {
+    gap: 2vh;
 }
 
-
-.desktop-view .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70%;
-    width: fit-content;
-    transform-origin: top left;
+.xxl .login-content {
+    display: block;
+    height: fit-content;
+    width: 100%;
+    scale: 0.9;
+    max-width: 650px;
 }
-
-.desktop-view #main-content {
-    gap: 5%;
-}
-
-.desktop-view #login-section {
-
-    height: 100%;
-    border-radius: 30px;
-
-    backdrop-filter: blur(10px);
-    padding-left: 15%;
-    padding-right: 15%;
-  
-}
-
-
-
 
 
 </style> 

@@ -1,13 +1,13 @@
 <template>
-    <div class="nav-drawer">
+    <div class="nav-drawer" :style="{ width: drawerVisible ? '300px' : '0'}">
         <header>
-            <img class="circle-logo" src="../assets/images/624_circle_logo.png" alt="Logo">
+            <img class=" circle-logo" src="../assets/images/624_circle_logo.png" alt="Logo">
             <div class="user-info">
                 <p class="user-email">{{email}}</p>
                 <p class="user-name">{{username}}</p>
             </div>
-            <button class="nav-button">
-                <img class="nav-icon" src="../assets/svgs/nav-icon.svg" alt="Nav">
+            <button class="inner-nav-button" @click="drawerVisible = false">
+                <SvgComponent name="nav-icon" class="nav-icon" />
             </button>
         </header>
         <div class="line"> </div>
@@ -27,16 +27,14 @@
         </div>
         <div class="line"> </div>
         <div class="admins-header">
-            ADMINS
+            <p class="admins-title">Admins</p>
             <button class="admin-button">
                 <SvgComponent name="plus-icon" class="plus-icon" />
             </button>
         </div>
         <div class="admin-list">
-            <!-- TODO: Iterate through admin users -->
-            <div class="admin-user">
-                <SvgComponent name="activity-indicator" class="activity-icon" />
-                Michael Chukwunonso Arinze
+            <div class="admin-user" v-for="(name, index) in adminUsers" :key="index">
+                <SvgComponent name="activity-indicator" class="activity-icon" />{{name}}
             </div>
         </div>
         <button class="logout-button" :onclick="logout">
@@ -44,20 +42,43 @@
             Logout
         </button>
     </div>
+    <button class="outer-nav-button" @click="drawerVisible = true">
+        <SvgComponent name="nav-icon" class="nav-icon" />
+    </button>
 </template>
 
 <script setup lang="ts">
 import { getAuth } from 'firebase/auth';
 import SvgComponent from './SvgComponent.vue';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { db } from '../composables/database';
+import 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
+
+var drawerVisible = ref(true);
 
 const auth = getAuth();
 const user = auth.currentUser;
 
 const email = (user?.email) ? user.email.toUpperCase() : "EMAIL@STUDENTS.KATYISD.ORG";
-const username = (user?.displayName) ? user.displayName : "User Name";
-// TODO: Add admin check into firebase
-const isAdmin = true;
+var username = (user?.displayName) ? user.displayName : "User Name";
+var isAdmin = false;
+
+const adminUsers =  ref<string[]>([]);
+getDocs(collection(db, 'users')).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        if(doc.data().admin){
+            adminUsers.value.push(doc.data().userName);
+            if(user?.uid == doc.id){
+                isAdmin = true;
+            }
+        }
+        if(doc.id == user?.uid){
+            username = doc.data().userName;
+        }
+    });
+});
 
 const router = useRouter();
 const logout = () => {
@@ -68,11 +89,25 @@ const logout = () => {
 </script>
 
 <style scoped>
+.outer-nav-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
 .nav-drawer {
-    position: relative;
-    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    z-index: 200;
+    transition: all 0.3s ease;
     height: 100%;
-    min-width: fit-content;
     background-color: black;
     flex-shrink: 0;
 }
@@ -95,12 +130,15 @@ header {
 .user-info {
     width: 60%;
     margin: 0;
+    white-space: nowrap;
 }
 
 .user-name {
     font-size: 20px;
     font-weight: 400;
     margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .user-email{
@@ -119,7 +157,7 @@ header {
     background: radial-gradient(50% 50% at 50% 50%, #D5D5D5 0%, rgba(218, 218, 218, 0.00) 100%);
 }
 
-.nav-button {
+.inner-nav-button {
     position: absolute;
     top: 15px;
     right: 10px;
@@ -165,7 +203,7 @@ header {
 
 .nav-icon {
     width: 30px;
-    height: 20px;
+    height: 30px;
 }
 
 .admins-header{
@@ -178,13 +216,19 @@ header {
     padding-right: 10px;
 }
 
+.admins-title{
+    margin: 0;
+    white-space: nowrap;
+}
+
 .admin-button{
     display: flex;
     align-items: center;
     justify-self: flex-end;
     cursor: pointer;
     background-color: transparent;
-    border: none;    
+    border: none;
+    white-space: nowrap;
 }
 
 .plus-icon{
@@ -196,6 +240,13 @@ header {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    white-space: nowrap;
+}
+
+.admin-user{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
 }
 
 .activity-icon{

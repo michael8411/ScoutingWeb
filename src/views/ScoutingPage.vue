@@ -1,17 +1,8 @@
 <template>
-  <NavDrawer/>
   <div class="scouting-container">
     <header class="header">
-      <div class="logo-logout">
-        <img class="logo" src="../assets/images/cryptonite_logo.png" alt="Logo">
-        <button class="logout-button" @click="logoutOnClick">
-          <img class="logout-image" src="../assets/images/logout.png" alt="Logout">
-          <span class="logout-text">Logout</span>
-        </button>
-      </div>
       <h1 class="title">Comment Scouting</h1>
     </header>
-
     <main class="main-content">
       <div class="dynamic-components">
         <div v-for="(componentConfig, index) in components" :key="index">
@@ -21,10 +12,6 @@
       <Button @click="onClick" label="Submit to Database" />
       <h2 class="invalid-popup hide">INVALID INFORMATION</h2>
     </main>
-    <iframe src="https://docs.google.com/spreadsheets/d/15giJVkuOy0v2wKyAy-2l3TfwOa-nRj0uLQra-LScbJo/edit#gid=0"
-      width=400 height=400 frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen></iframe>
   </div>
 </template>
 
@@ -35,10 +22,11 @@ import TextField from '../components/TextField.vue';
 import Dropdown from '../components/DropdownField.vue';
 import Button from '../components/StyledButton.vue';
 import { useFormStore } from '../state_management/formStore';
-import database from '../main';
+;
 import router from '../router/index';
 import teamsJSON from '../data/teams.json';
 import NavDrawer from '../components/NavDrawer.vue';
+import { db } from '../composables/database';
 
 interface ComponentConfig {
   type: typeof TextField | typeof Dropdown;
@@ -84,7 +72,7 @@ async function addMatchToDatabase() {
   try {
     const submitMap = Object.fromEntries(formStore.submissionData);
     const matchNumString = `match${formStore.submissionData.get('Match Number')}`;
-    const newMatch = doc(database, "matches", matchNumString, "teams", formStore.submissionData.get('Team Number'));
+    const newMatch = doc(db, "matches", matchNumString, "teams", formStore.submissionData.get('Team Number'));
     await setDoc(newMatch, submitMap);
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -92,7 +80,7 @@ async function addMatchToDatabase() {
 }
 
 function logoutOnClick() {
-  router.push('/login');
+  router.push('/aaaaaa');
 }
 
 watch(resetVal, (newValue) => {
