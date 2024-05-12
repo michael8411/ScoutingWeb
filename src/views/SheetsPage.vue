@@ -4,9 +4,10 @@
             <h1>Google Sheets</h1>
         </header>
         <iframe class="sheet" src="https://docs.google.com/spreadsheets/d/15giJVkuOy0v2wKyAy-2l3TfwOa-nRj0uLQra-LScbJo/edit#gid=0"
-            width=400 height=400 frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+        width=100% height=100% frameborder="0" 
+        style="filter: invert(100%) hue-rotate(180deg);"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
     </div>
 </template>
 

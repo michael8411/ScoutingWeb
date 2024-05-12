@@ -313,7 +313,7 @@ const handleGoogleSignIn = async () => {
     list-style: none;
     gap: 40px;
     padding: 0;
-    font-family: 'Lemon/Milk', 'Futura PT';
+    font-family: 'Manrope', sans-serif;
     font-size: 22px;
     justify-content: flex-start;
 }
@@ -406,7 +406,7 @@ const handleGoogleSignIn = async () => {
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
-    border-radius: 40px 10px 10px 40px;
+    border-radius: 40px 0px 0px 40px;
     transform-origin: top left;
     position: relative;
     overflow: hidden;
@@ -415,7 +415,7 @@ const handleGoogleSignIn = async () => {
     transition: background-position 0.3s, border-color 0.3s;
     z-index: 1;
     object-fit: cover;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 #login-frame::before {
@@ -425,8 +425,8 @@ const handleGoogleSignIn = async () => {
     left: 0;
     right: 0;
     bottom: 0;
-    opacity: 0.5;
-    background: url("src/assets/images/BlurredBackground.png") rgb(10, 10, 10) 100% / cover no-repeat;
+    opacity: 0.7;
+
     filter: blur(5px) brightness(50%);
     z-index: 0;
 }
@@ -440,7 +440,7 @@ const handleGoogleSignIn = async () => {
     z-index: 1;
     width: 350px;
     height: fit-content;
-    font-family: 'Lemon/Milk', 'Futura PT';
+    font-family: 'Manrope', sans-serif;
     font-size: 25px;
     padding-bottom: 5vh;
     line-height: 1;
@@ -600,10 +600,20 @@ label {
     left: 0;
     right: 0;
     bottom: 0;
-    opacity: 0.5;
-    background: url("src/assets/images/BlurredBackground.png") rgb(10, 10, 10) 60% / cover no-repeat;
+    opacity: 0.7;
+    background: url("src/assets/images/BlurredBackground.png") rgb(0, 0, 0) 90% / cover no-repeat;
     filter: blur(5px) brightness(50%);
     z-index: 0;
+    animation: breathingBlur 3.5s ease-in-out  infinite;
+}
+
+@keyframes breathingBlur {
+    0%, 100% {
+        filter: blur(10px) brightness(50%);
+    }
+    50% {
+        filter: blur(70px) brightness(50%);
+    }
 }
 
 #glitch_logo {
@@ -677,10 +687,7 @@ Button {
     position: relative;
     --x: 50%;
     --y: 50%;
-    border-top: 4px dotted transparent;
-    border-right: 1px none transparent;
-    border-bottom: 1px none transparent;
-    border-left: 4px double transparent;
+
     background: linear-gradient(#0b0b0b, #070707) padding-box,
         radial-gradient(farthest-corner at var(--x) var(--y), #848484, #020202) border-box;
 }
@@ -689,6 +696,9 @@ Button {
     content: '';
     position: absolute;
     border-radius: 42px;
+    /* Other styles... */
+    background-image: linear-gradient(var(--a), #000000, #3a3939, #0e0e0e 43%, #0c300c);
+    animation: rotate-gradient 30s linear infinite;
 }
 
 #base::before {
@@ -698,7 +708,7 @@ Button {
     bottom: 0.35vh;
     background-image: linear-gradient(var(--a), #000000, #3a3939, #0e0e0e 43%, #0c300c);
     z-index: -2;
-    animation: rotate-gradient 20s linear infinite;
+    animation: rotate-gradient 30s linear infinite;
 }
 
 #base::after {
@@ -711,7 +721,7 @@ Button {
     filter: blur(10px);
     opacity: 0.7;
     z-index: -1;
-    animation: rotate-gradient 20s linear infinite;
+    animation: rotate-gradient 30s linear infinite;
 }
 
 #gradient {
@@ -722,6 +732,7 @@ Button {
     height: calc(100% - 20px);
     width: calc(100% - 10px);
     background-image: linear-gradient(var(--rotate-angle), #0e460e, #3a3939, #0e0e0e 43%, #0c300c);
+    animation: rotate-gradient 20s linear infinite;
     filter: blur(0.5rem);
     border-radius: 25px;
     opacity: 0.5;
@@ -748,8 +759,8 @@ Button {
 }
 
 .xs #base {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     margin: 0;
     background-color: black;
     border-radius: 0;
@@ -794,8 +805,9 @@ Button {
 }
 
 .sm #base {
-    height: 100%;
-    width: 100%;
+    
+    height: 100vh;
+    width: 100vw;
     margin: 0;
     background-color: black;
     border-radius: 0;
@@ -831,9 +843,8 @@ Button {
 
 .md .login-content {
     display: block;
-    width: 100%;
+    width: 80%;
     height: fit-content;
-    scale: 0.9;
 }
 
 .md #account-links {
@@ -851,15 +862,15 @@ Button {
 }
 
 .lg .container {
-    width: 100%;
+    width: 50%;
     height: 100%;
 }
 
 .lg .login-content {
     display: block;
     height: fit-content;
-    width: 100%;
-    scale: 0.8;
+    width: 80%;
+    transform: scale(0.9);
 }
 
 .lg #account-links {
@@ -874,8 +885,7 @@ Button {
 .xl .login-content {
     display: block;
     height: fit-content;
-    width: 100%;
-    scale: 0.9;
+    width: 80%;
 }
 
 .xl #login-frame {
@@ -905,8 +915,7 @@ Button {
 .xxl .login-content {
     display: block;
     height: fit-content;
-    width: 100%;
-    scale: 0.9;
+    width: 80%;
     max-width: 650px;
 }
 

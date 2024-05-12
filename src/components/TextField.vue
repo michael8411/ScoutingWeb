@@ -1,175 +1,221 @@
 <template>
-    <div :class="classProp">
-        <label>{{ label }}</label>
-        <form @submit.prevent>
-            <input :title="title" :maxlength="maxlength" v-model="inputText" @input="handleInput"
-                @keypress="handleKeypress" />
-            <label class="maxChar">
-                {{ inputText.length }}/{{ maxlength }}
-            </label>
-        </form>
-        <p>{{ validationStatusMessage }}</p>
+  <div class="dynamic-textfield-wrapper">
+    <label v-if="metadata.label" class="textfield-label">{{ metadata.label }}</label>
+    <div class="dynamic-textfield" :class="metadata.class">
+      <input
+        :title="metadata.title"
+        :maxlength="metadata.maxlength"
+        v-model="inputText"
+        @input="handleInput"
+        @keypress="handleKeypress"
+      />
+      <label class="maxChar"> {{ inputText.length }}/{{ metadata.maxlength }} </label>
     </div>
+    <p>{{ validationStatusMessage }}</p>
+  </div>
 </template>
-  
-<script setup lang="ts">
-import { ref, watch, onMounted, defineProps } from "vue";
-import { useFormStore } from "../state_management/formStore";
 
-type TextFieldProps = {
-    class: string;
-    label: string;
-    filterFile?: string[];
-    maxlength?: number;
-    title?: string;
-    constraints?: string;
-    initialValue?: string;
-    reset?: boolean;
-    resetBehavior?: string;
-};
+<script lang="ts">
+import { useComponentStore } from '../state_management/componentStore'
+import { defineComponent, computed, ref, onMounted, watch } from 'vue'
 
-const classProp = defineProps<TextFieldProps>().class;
-const label = defineProps<TextFieldProps>().label;
-const filterFile = defineProps<TextFieldProps>().filterFile;
-const maxlength = defineProps<TextFieldProps>().maxlength || 100;
-const title = defineProps<TextFieldProps>().title;
-const constraints = defineProps<TextFieldProps>().constraints;
-const initialValue = defineProps<TextFieldProps>().initialValue || "";
-const reset = defineProps<TextFieldProps>().reset;
-const resetBehavior = defineProps<TextFieldProps>().resetBehavior;
-
-const formStore = useFormStore();
-const inputText = ref(initialValue);
-const validationStatusMessage = ref("");
-
-onMounted(() => {
-    formStore.setValue(label.replace(":", "").trim(), initialValue);
-});
-
-watch(() => reset, (newVal) => {
-    if (newVal) resetField();
-});
-
-watch(inputText, (newValue) => {
-    handleConstraints(newValue);
-    handleMaxLength(newValue);
-    handleFilterFile(newValue);
-    updateFormStore(newValue);
-});
-
-function handleInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    applyConstraints(target.value);
+interface TextFieldMetadata {
+  class?: string
+  label?: string
+  filterFile?: string[]
+  maxlength?: number
+  title?: string
+  constraints?: string
+  initialValue?: string
+  reset?: boolean
+  resetBehavior?: string
 }
 
-function handleKeypress(event: KeyboardEvent) {
-    if (event.key === 'Enter') event.preventDefault();
-}
+export default defineComponent({
+  name: 'DynamicTextField',
+  props: {
+    componentId: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props) {
+    const componentStore = useComponentStore()
+    const inputText = ref('')
+    const validationStatusMessage = ref('')
 
-function handleConstraints(newValue: string) {
-    switch (constraints) {
-        case "Initials":
-            inputText.value = validateInitials(newValue);
-            break;
-        case "Letters":
-            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-            break;
-        case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, "");
-            break;
-        case "Numbers":
-            inputText.value = newValue.replace(/\D/g, "");
-            break;
+    const metadata = computed<TextFieldMetadata>(() => {
+      const component = componentStore.components.find((c) => c.id === props.componentId)
+      return component ? component.metadata : {}
+    })
+
+    onMounted(() => {
+      inputText.value = metadata.value.initialValue || ''
+    })
+
+    watch(
+      () => metadata.value.reset,
+      (newVal) => {
+        if (newVal) resetField()
+      }
+    )
+
+    watch(inputText, (newValue) => {
+      handleConstraints(newValue)
+      handleMaxLength(newValue)
+      handleFilterFile(newValue)
+      updateComponentStore(newValue)
+    })
+
+    function handleInput(event: Event) {
+      const target = event.target as HTMLInputElement
+      applyConstraints(target.value)
+    }
+
+    function handleKeypress(event: KeyboardEvent) {
+      if (event.key === 'Enter') event.preventDefault()
+    }
+
+    function handleConstraints(newValue: string) {
+      switch (metadata.value.constraints) {
+        case 'Initials':
+          inputText.value = validateInitials(newValue)
+          break
+        case 'Letters':
+          inputText.value = newValue.replace(/[^a-zA-Z]/g, '')
+          break
+        case 'Text':
+          inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, '')
+          break
+        case 'Numbers':
+          inputText.value = newValue.replace(/\D/g, '')
+          break
         default:
-            inputText.value = newValue;
+          inputText.value = newValue
+      }
     }
-}
 
-
-function resetField() {
-    switch (resetBehavior) {
-        case "preserve":
-            break;
-        case "increment":
-            inputText.value = (parseInt(inputText.value) + 1).toString();
-            break;
+    function resetField() {
+      switch (metadata.value.resetBehavior) {
+        case 'preserve':
+          break
+        case 'increment':
+          inputText.value = (parseInt(inputText.value) + 1).toString()
+          break
         default:
-            inputText.value = "";
+          inputText.value = ''
+      }
+      updateComponentStore(inputText.value)
     }
-    updateFormStore(inputText.value);
-}
 
-function applyConstraints(newValue: string) {
-    switch (constraints) {
-        case "Initials":
-            inputText.value = validateInitials(newValue);
-            break;
-        case "Letters":
-            inputText.value = newValue.replace(/[^a-zA-Z]/g, "");
-            break;
-        case "Text":
-            inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, "");
-            break;
-        case "Numbers":
-            inputText.value = newValue.replace(/\D/g, "");
-            break;
+    function applyConstraints(newValue: string) {
+      switch (metadata.value.constraints) {
+        case 'Initials':
+          inputText.value = validateInitials(newValue)
+          break
+        case 'Letters':
+          inputText.value = newValue.replace(/[^a-zA-Z]/g, '')
+          break
+        case 'Text':
+          inputText.value = newValue.replace(/[^a-zA-Z0-9\s,.;()'"/?!]/g, '')
+          break
+        case 'Numbers':
+          inputText.value = newValue.replace(/\D/g, '')
+          break
         default:
-            inputText.value = newValue;
+          inputText.value = newValue
+      }
     }
-}
 
-function handleMaxLength(newValue: string) {
-    if (newValue.length === maxlength) {
-        inputText.value = newValue.toUpperCase();
-        const lengthLabel = document.getElementById(label.replace(":", "").trim()) as HTMLLabelElement;
-        if (lengthLabel) {
-            lengthLabel.style.color = "red";
-        }
-    } else {
-        const lengthLabel = document.getElementById(label.replace(":", "").trim()) as HTMLLabelElement;
-        if (lengthLabel) {
-            lengthLabel.style.color = "var(--color-text)";
-        }
+    function handleMaxLength(newValue: string) {
+      if (newValue.length === metadata.value.maxlength) {
+        inputText.value = newValue.toUpperCase()
+      }
     }
-}
 
-function handleFilterFile(newValue: string) {
-    if (filterFile && !filterFile.includes(newValue)) {
-        validationStatusMessage.value = `Invalid ${label}`;
-    } else {
-        validationStatusMessage.value = `Valid ${label}`;
+    function handleFilterFile(newValue: string) {
+      if (metadata.value.filterFile && !metadata.value.filterFile.includes(newValue)) {
+        validationStatusMessage.value = `Invalid ${metadata.value.label}`
+      } else {
+        validationStatusMessage.value = `Valid ${metadata.value.label}`
+      }
     }
-}
 
-function validateInitials(newValue: string) {
-    return /^[a-zA-Z]*$/.test(newValue) ? newValue : newValue.slice(0, -1);
-}
+    function validateInitials(newValue: string) {
+      return /^[a-zA-Z]*$/.test(newValue) ? newValue : newValue.slice(0, -1)
+    }
 
-function updateFormStore(value: string) {
-    formStore.setValue(label.replace(":", "").trim(), value);
-}
+    function updateComponentStore(value: string) {
+      componentStore.updateComponent(props.componentId, {
+        ...metadata.value,
+        initialValue: value
+      })
+    }
+
+    return {
+      metadata,
+      inputText,
+      validationStatusMessage,
+      handleInput,
+      handleKeypress
+    }
+  }
+})
 </script>
 
 <style scoped>
+.dynamic-textfield-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+}
+
+.textfield-label {
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.dynamic-textfield {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.dynamic-textfield input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #989898;
+  border-radius: 8px;
+  font-size: 24px;
+  background-color: transparent;;
+  color: #989898 ;
+  font-family: 'Manrope', sans-serif;
+}
+
 .maxChar {
-    position: relative;
-    left: 5px;
-    font-size: 11px;
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 12px;
+  color: #888;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-content: space-between;
-    justify-content: center;
-}
+@media screen and (max-width: 600px) {
+  .dynamic-textfield-wrapper {
+    gap: 5px;
+  }
 
-input {
-    position: relative;
-    border: none;
-    background-color: var(--color-background);
-    color: var(--baseFg);
-    border-bottom: 1px solid var(--color-text);
-    left: 5px;
+  .textfield-label {
+    font-size: 16px;
+  }
+
+  .dynamic-textfield input {
+    font-size: 14px;
+  }
 }
 </style>

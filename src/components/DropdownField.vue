@@ -1,93 +1,181 @@
+<!-- Dropdown.vue -->
 <template>
-  <div class="custom-select">
-    <select @change="updateValue" class="custom-dropdown">
-      <option disabled selected>Select your option</option>
-      <option v-for="(choice, index) in props.options" :key="index" :value="choice">
-        {{ choice }}
-      </option>
-    </select>
-    <div class="select-arrow">
-      <img src="../assets/images/select-arrow.png">
+  <div class="dynamic-dropdown-wrapper">
+    <label v-if="metadata.label" class="dropdown-label">{{ metadata.label }}</label>
+    <div class="dynamic-dropdown" :class="metadata.class">
+      <div class="dropdown-container" @click="toggleDropdown">
+        <div class="dropdown-selected">
+          {{ selectedOption ? selectedOption.text : 'Select an option' }}
+        </div>
+        <div class="dropdown-arrow" :class="{ open: isOpen }"></div>
+      </div>
+      <ul v-show="isOpen" class="dropdown-options">
+        <li
+          v-for="option in metadata.options"
+          :key="option.value"
+          @click="selectOption(option)"
+          class="dropdown-option"
+        >
+          {{ option.text }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+<script lang="ts">
+import { useComponentStore } from '../state_management/componentStore'
+import { defineComponent, computed, ref, onMounted } from 'vue'
 
-const props = defineProps({
-  modelValue: String,
-  options: Array
-});
+interface DropdownOption {
+  text: string
+  value: string
+}
 
-const emit = defineEmits(['update:modelValue']);
+interface DropdownMetadata {
+  class?: string
+  label?: string
+  options: DropdownOption[]
+  defaultValue?: string
+}
 
-const updateValue = (event: Event) => {
-  const newValue = (event.target as HTMLSelectElement).value;
-  emit('update:modelValue', newValue);
-};
+export default defineComponent({
+  name: 'DynamicDropdown',
+  props: {
+    componentId: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props) {
+    const componentStore = useComponentStore()
+    const isOpen = ref(false)
+    const selectedOption = ref<DropdownOption | null>(null)
+
+    const metadata = computed<DropdownMetadata>(() => {
+      const component = componentStore.components.find((c) => c.id === props.componentId)
+      return component ? component.metadata : { options: [] }
+    })
+
+    function toggleDropdown() {
+      isOpen.value = !isOpen.value
+    }
+
+    function selectOption(option: DropdownOption) {
+      selectedOption.value = option
+      isOpen.value = false
+      componentStore.updateComponent(props.componentId, {
+        ...metadata.value,
+        defaultValue: option.value
+      })
+    }
+
+    onMounted(() => {
+      const defaultValue = metadata.value.defaultValue
+      if (defaultValue) {
+        const defaultOption = metadata.value.options.find((option) => option.value === defaultValue)
+        if (defaultOption) {
+          selectedOption.value = defaultOption
+        }
+      }
+    })
+
+    return {
+      metadata,
+      isOpen,
+      selectedOption,
+      toggleDropdown,
+      selectOption
+    }
+  }
+})
 </script>
-  
-  
+
 <style scoped>
-.custom-select {
+.dynamic-dropdown-wrapper {
   display: flex;
-  width: fit-content;
-  position: relative;
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #232b2b;
-  font-size: 16px;
-  line-height: 1.5;
-  padding: 10px;
-  height: 40px;
-  background-color: var(--vt-c-black-soft);
-}
-
-.custom-select select {
+  align-items: flex-start;
+  justify-content: bottom;
   width: 100%;
-  height: 100%;
-  appearance: none;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding-right: 30px;
+  gap: 50px;
+}
+
+.dropdown-label {
+  margin-right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.dynamic-dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #1e1e1e;
+  box-shadow: 0px 4px 4px 0px rgba(43, 43, 43, 0.25);
+  color: #fff;
+  border-radius: 15px;
   cursor: pointer;
-  color: var(--baseFg);
-  text-overflow: ellipsis;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-justify: center;
+  user-select: none;
+  height: 50px;
+  width: 260px;
 }
 
-
-
-.custom-select select::-ms-expand {
-  display: none;
+.dropdown-selected {
+  color: #989898;
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #989898;
+  transition: transform 0.3s;
 }
 
-.select-arrow {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  pointer-events: none;
+.dropdown-arrow.open {
+  transform: rotate(180deg);
 }
 
-.select-arrow img {
-  display: block;
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg);
+.dropdown-options {
+  position: relative;
+  bottom: 100%; /* Positioned at the bottom edge of the dropdown-container */
+  left: 0;
+  right: 0;
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  margin-top: 5px; /* Add margin to move it below the container */
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+.dropdown-option {
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
 }
 
-.custom-select:hover {
-  border-color: var(--accentBg);
+.dropdown-option:hover {
+  background-color: #131313;
+  border-radius: 15px;
 }
 
-.custom-select select option {
-  background-color: var(--vt-c-black-soft);
-  color: var(--baseFg);
+@media screen and (max-width: 600px) {
+  .dynamic-dropdown {
+    width: 100%;
+  }
 }
 </style>

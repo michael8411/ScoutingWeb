@@ -1,41 +1,25 @@
 <template>
-  <button
-    :class="['button', btnClass]"
-    :style="btnStyle"
-    @click="handleClick"
-    role="button"
-  >
+  <button :class="['button', btnClass]" :style="computedStyle" @click="handleClick" role="button">
     {{ label }}
   </button>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-
-const props = defineProps({
-  label: { type: String, default: 'Button' },
-  btnClass: { type: String, default: '' },
-  btnStyle: { type: Object, default: () => ({}) },
-  onClick: { type: Function, default: null },
-});
+ import { ref, computed } from 'vue';
+const props = defineProps({ label: { type: String, default: 'Button' }, 
+                            btnClass: { type: String, default: '' }, 
+                            btnStyle: { type: Object, default: () => ({}) }, 
+                            onClick: { type: Function, default: null }, });
 
 const btnStyle = ref(props.btnStyle);
 
-const handleClick = (event: MouseEvent) => {
-  if (props.onClick) {
-    props.onClick(event);
-  }
-};
+const handleClick = (event: MouseEvent) => { if (props.onClick) { props.onClick(event); } };
 
-const computedStyle = computed(() => {
-  return {
-    '--button-height': '60px', // default height, can be overridden
-    ...btnStyle.value,
-  };
-});
+const computedStyle = computed(() => { return { '--button-height': '60px' , ...btnStyle.value, }; });
 </script>
+
 <style>
-:root{
+:root {
   --button-height: 52px;
 }
 
@@ -47,7 +31,7 @@ const computedStyle = computed(() => {
   color: #111;
   cursor: pointer;
   display: flex;
-  font-size: 16px;
+  font-size: 24px;
   height: var(--button-height);
   justify-content: center;
   justify-self: center;
@@ -59,12 +43,13 @@ const computedStyle = computed(() => {
   text-decoration: none;
   user-select: none;
   touch-action: manipulation;
-  font-family: 'Lemon/Milk', 'Futura PT';
+  font-family: 'Manrope', sans-serif;
+  font-weight: bold;
 }
 .button:after {
   background-color: #232b2b; /* Possible Culprit */
   border-radius: 15px;
-  content: ""; /* Possible Culprit */
+  content: ''; /* Possible Culprit */
   display: block;
   height: var(--button-height);
   left: -1px;
@@ -72,7 +57,7 @@ const computedStyle = computed(() => {
   position: absolute;
   top: -3px;
   transform: translate(8px, 8px);
-  transition: transform .2s ease-out; /* Possible Culprit */
+  transition: transform 0.2s ease-out; /* Possible Culprit */
   z-index: -1;
 }
 

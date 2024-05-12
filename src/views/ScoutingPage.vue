@@ -1,3 +1,5 @@
+<!-- ScoutingPage.vue -->
+<!-- ScoutingPage.vue -->
 <template>
   <div class="scouting-container">
     <header class="header">
@@ -5,94 +7,180 @@
     </header>
     <main class="main-content">
       <div class="dynamic-components">
-        <div v-for="(componentConfig, index) in components" :key="index">
-          <component :is="componentConfig.type" v-bind="componentConfig.props" />
-        </div>
+        <component 
+          v-for="component in componentStore.components"
+          :key="component.id"
+          :is="getComponentType(component.type)"
+          :componentId="component.id"
+        />
       </div>
-      <Button @click="onClick" label="Submit to Database" />
+
       <h2 class="invalid-popup hide">INVALID INFORMATION</h2>
     </main>
+    <Button class="submit-button" @click="onClick" label="Submit to Database" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import { doc, setDoc } from "firebase/firestore";
-import TextField from '../components/TextField.vue';
-import Dropdown from '../components/DropdownField.vue';
-import Button from '../components/StyledButton.vue';
-import { useFormStore } from '../state_management/formStore';
-;
-import router from '../router/index';
-import teamsJSON from '../data/teams.json';
-import NavDrawer from '../components/NavDrawer.vue';
-import { db } from '../composables/database';
+// import router from '../router/index'
+// import teamsJSON from '../data/teams.json';
+// import NavDrawer from '../components/NavDrawer.vue';
+// import TextField from '../components/TextField.vue';
+// import Dropdown from '../components/DropdownField.vue';
 
-interface ComponentConfig {
-  type: typeof TextField | typeof Dropdown;
-  props: Record<string, any>;
-}
+import { ref, onMounted, watch } from 'vue'
+import { doc, setDoc } from 'firebase/firestore'
+import Button from '../components/StyledButton.vue'
+import { useFormStore } from '../state_management/formStore'
+import { db } from '../composables/database'
+import { useComponentStore } from '../state_management/componentStore'
+import DynamicDropdown from '../components/DropdownField.vue'
+import DynamicTextField from '../components/TextField.vue'
 
-const formStore = useFormStore();
-const resetVal = ref(false);
+const formStore = useFormStore()
+const resetVal = ref(false)
 
-const components = ref<ComponentConfig[]>([
-
-  {
-    type: Dropdown,
-    props: {
-      modelValue: '',
-      options: teamsJSON.teams
-    }
-  }
-]);
+const componentStore = useComponentStore()
 
 onMounted(() => {
-  formStore.reset();
-});
+  componentStore.syncComponents()
+})
 
+function getComponentType(type: string) {
+  switch (type) {
+    case 'DynamicDropdown':
+      return DynamicDropdown
+    case 'DynamicTextField':
+      return DynamicTextField
+    default:
+      return null
+  }
+}
 function onClick() {
   if (formStore.validate()) {
-    addMatchToDatabase();
-    resetVal.value = true;
+    addMatchToDatabase()
+    resetVal.value = true
   } else {
-    showInvalidPopup();
+    showInvalidPopup()
   }
 }
 
 function showInvalidPopup() {
-  let popup = document.querySelector(".invalid-popup") as HTMLElement;
+  let popup = document.querySelector('.invalid-popup') as HTMLElement
   if (popup) {
-    popup.classList.remove("hide");
-    setTimeout(() => popup.classList.add("hide"), 3000);
+    popup.classList.remove('hide')
+    setTimeout(() => popup.classList.add('hide'), 3000)
   }
 }
 
 async function addMatchToDatabase() {
   try {
-    const submitMap = Object.fromEntries(formStore.submissionData);
-    const matchNumString = `match${formStore.submissionData.get('Match Number')}`;
-    const newMatch = doc(db, "matches", matchNumString, "teams", formStore.submissionData.get('Team Number'));
-    await setDoc(newMatch, submitMap);
+    const submitMap = Object.fromEntries(formStore.submissionData)
+    const matchNumString = `match${formStore.submissionData.get('Match Number')}`
+    const newMatch = doc(
+      db,
+      'matches',
+      matchNumString,
+      'teams',
+      formStore.submissionData.get('Team Number')
+    )
+    await setDoc(newMatch, submitMap)
   } catch (e) {
-    console.error("Error adding document: ", e);
+    console.error('Error adding document: ', e)
   }
-}
-
-function logoutOnClick() {
-  router.push('/aaaaaa');
 }
 
 watch(resetVal, (newValue) => {
   if (newValue) {
-    formStore.reset();
-    resetVal.value = false;
+    formStore.reset()
+    resetVal.value = false
   }
-});
+})
 </script>
 
-  
 <style scoped>
+.title {
+  font-size: 48px;
+  font-family: 'Manrope', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: 989898;
+}
+.dynamic-components {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  min-width: fit-content;
+  width: 600px;
+  height: 950px;
+  background-color: #0d0d0d;
+  border-radius: 20px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6b6b6b transparent;
+}
+.dynamic-components::-webkit-scrollbar {
+  width: 8px; /* Adjust the width of the scrollbar */
+}
+
+.dynamic-components::-webkit-scrollbar-track {
+  background: transparent; /* Makes the track invisible */
+}
+
+.dynamic-components::-webkit-scrollbar-thumb {
+  background-color: #6b6b6b; /* Color of the thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+  border: 2px solid transparent; /* Optional: Adds a border around the thumb */
+  background-clip: padding-box; /* Ensures the border doesn't overlap the background color */
+  min-height: 30px; /* Sets a minimum height for the thumb */
+}
+.dynamic-components::-webkit-scrollbar-thumb {
+  right: 2px; /* Shifts the scrollbar thumb slightly to the left */
+}
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.scouting-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 80px;
+}
+
+.submit-button {
+  width: 350px;
+  height: 75px;
+}
+
+.submit-button::after {
+  width: 350px;
+  height: 75px;
+}
+
 :root {
   --option-grid-gap: 20px;
 }
@@ -121,7 +209,7 @@ watch(resetVal, (newValue) => {
 }
 
 #title {
-  font-family: 'Lemon/Milk', 'Futura PT';
+  font-family: 'Manrope', sans-serif;
   margin: auto;
   white-space: nowrap;
   overflow: hidden;
@@ -226,6 +314,63 @@ watch(resetVal, (newValue) => {
 .hide {
   visibility: hidden;
 }
+
+@media screen and (max-width: 600px) {
+  .title {
+    font-size: 32px;
+  }
+
+  .dynamic-components {
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .main-content {
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .scouting-container {
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .submit-button,
+  .submit-button::after {
+    width: 100%;
+    height: 60px;
+  }
+
+  .logo {
+    max-width: 40%;
+    height: auto;
+  }
+
+  #comments {
+    width: 100%;
+  }
+
+  #title {
+    font-size: calc(100% + 1.2vw);
+  }
+
+  .logout-text {
+    font-size: 4vw;
+  }
+
+  .logout-image {
+    max-width: 40%;
+    height: auto;
+  }
+
+  #optionLabels {
+    gap: calc(var(--option-grid-gap) + 8px);
+  }
+}
 </style>
-  
-  

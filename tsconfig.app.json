@@ -3,34 +3,18 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "moduleResolution": "node",
     "esModuleInterop": true,
-    
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "outDir": "./out-tsc/app",
-    "types": []
+    "moduleResolution": "node",
+    "types": ["pinia"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.json"
-  ],
-  "exclude": [
-    "src/test.ts",
-    "src/**/*.spec.ts"
-  ],
-  "files": [
-    "src/main.ts",
-    
-],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.json"],
+  "exclude": ["src/test.ts", "src/**/*.spec.ts"],
+  "files": ["src/main.ts"],
   "references": []
 }

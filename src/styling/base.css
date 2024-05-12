@@ -68,6 +68,7 @@ body {
 }
 
 @font-face {
-  font-family: "Lemon/Milk";
+  font-family: "Lemon/Milk", sans-serif;
+  font-weight: bold;
   src: url("/src/assets/fonts/Lemon-Milk/Lemon-Milk-Pro-Regular.woff") format('woff');
 }

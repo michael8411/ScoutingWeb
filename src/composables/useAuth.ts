@@ -1,4 +1,3 @@
-// useAuth.ts
 import { ref } from 'vue';
 import { FirebaseError } from '@firebase/util';
 import {
@@ -52,6 +51,31 @@ export function useAuth() {
     }
   };
 
+  const getCurrentUser = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+  
+    if (user) {
+      const displayName = user.displayName;
+      const email = user.email;
+      
+      let firstName = '';
+      let lastName = ''; 
+      if (displayName) {
+        const nameParts = displayName.split(' ');
+        firstName = nameParts[0];
+        lastName = nameParts.slice(1).join(' ');
+      }
+  
+      return {
+        firstName,
+        lastName,
+        email
+      };
+    } 
+    return null;
+  };
+
   const clearAuthError = () => {
     authError.value = null;
   };
@@ -61,6 +85,7 @@ export function useAuth() {
     signInWithGoogle,
     authError,
     getErrorMessage,
-    clearAuthError
+    clearAuthError,
+    getCurrentUser
   };
 }
