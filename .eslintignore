@@ -1,0 +1,38 @@
+# Node modules and package management
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build output directories
+dist/
+lib/
+out/
+build/
+
+# Temporary files and directories
+.tmp/
+.temp/
+.cache/
+
+# Logs
+*.log
+
+# Environment configuration files
+.env
+.env.*
+
+# IDE and editor directories
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Test directories
+coverage/
+*.test.ts
+*.spec.ts
+
+# Documentation
+/docs
+
+# Specific files or directories
+# /path/to/file-or-directory

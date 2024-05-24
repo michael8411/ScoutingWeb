@@ -1,6 +1,6 @@
 [
     {
-        "commentName": "Play Defense",
+        "optionLabel": "Failed Engage in Auton",
         "choices": [
             "N/A",
             "Yes",
@@ -8,39 +8,73 @@
         ]
     },
     {
-        "commentName": "Driver Skill",
+        "optionLabel": "Played Defense",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "optionLabel": "Driver Skill",
         "choices": [
             "N/A",
             "Bad",
+            "Below Average",
             "Average",
+            "Great",
             "Amazing"
         ]
     },
     {
-        "commentName": "Defending Level",
+        "optionLabel": "Strategic Links",
         "choices": [
             "N/A",
-            "Bad",
-            "Average",
-            "Amazing"
+            "Yes",
+            "No"
         ]
     },
     {
-        "commentName": "Links",
-        "choices": [
-            "N/A",
-            "1",
-            "2",
-            "3"
-        ]
-    },
-    {
-        "commentName": "Game Piece Specialization",
+        "optionLabel": "Game Piece Specialization",
         "choices": [
             "N/A",
             "Cubes",
             "Cones",
             "Both"
+        ]
+    },
+    {
+        "optionLabel": "Preferred Substation",
+        "choices": [
+            "N/A",
+            "Single",
+            "Double",
+            "Floor"
+        ]
+    },
+    {
+        "optionLabel": "Substation Speed",
+        "choices": [
+            "N/A",
+            "Slow",
+            "Moderate",
+            "Fast"
+        ]
+    },
+    {
+        "optionLabel": "Gave Away Penalty",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "optionLabel": "Popped Game Piece",
+        "choices": [
+            "N/A",
+            "Yes",
+            "No"
         ]
     }
 ]
