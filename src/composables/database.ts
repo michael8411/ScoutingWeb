@@ -12,8 +12,8 @@ const firebaseConfig = {
     measurementId: "G-048BY8QV6D"
 };
 
-const firebase = initializeApp(firebaseConfig);
-const db = getFirestore(firebase);
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 enableIndexedDbPersistence(db)
     .catch((err) => {
@@ -28,4 +28,4 @@ enableIndexedDbPersistence(db)
         }
 });
 
-export { db }
+export { db, firebaseApp }

@@ -4,12 +4,14 @@
     <header>
       <img class="circle-logo" src="../assets/images/624_circle_logo.png" alt="Logo" />
       <div class="user-info">
-        <p class="user-email">{{ email }}</p>
-        <p class="user-name">{{ username }}</p>
+        <p class="user-email">{{ userData ? userData.email.toUpperCase() : 'EMAIL@STUDENTS.KATYISD.ORG' }}</p>
+        <p class="user-name">{{ userData ? userData.userName : 'User Name' }}</p>
       </div>
-      <button class="inner-nav-button" @click="drawerVisible = false">
-        <SvgComponent name="nav-icon" class="nav-icon" />
-      </button>
+      <Transition name="fade">
+        <button v-if="drawerVisible" class="inner-nav-button" @click="drawerVisible = false">
+          <SvgComponent name="nav-icon" class="nav-icon" />
+        </button>
+      </Transition>
     </header>
     <div class="line"></div>
 
@@ -30,19 +32,31 @@
     </div>
 
     <!--Admin List-->
-    <div class="admin-section">
+    <div v-show="userData && userData.admin" class="admin-section">
       <div class="admins-header">
         <p class="admins-title">Admins</p>
-        <button class="admin-button">
+        <button class="admin-button" @click="adminPopupVisible = true">
           <SvgComponent name="plus-icon" class="plus-icon" />
         </button>
       </div>
       <div class="line"></div>
       <div class="admin-list">
-        <div class="admin-user" v-for="(name, index) in adminUsers" :key="index">
-          <SvgComponent name="activity-indicator" class="activity-icon" />{{ name }}
+        <div class="admin-user" v-for="user in adminUsers" :key="user.uid">
+          <SvgComponent name="activity-indicator" class="activity-icon" :class="{online: user.isOnline}" />
+          {{ user.userName }}
         </div>
       </div>
+      <Teleport to="body">
+        <Transition name="fade">
+          <!-- TODO: Add admin assign functionality and styling -->
+          <div v-show="drawerVisible && adminPopupVisible" class="admin-popup">
+            <p @click="adminPopupVisible = false">Assign Admins</p>
+            <div class="general-user" v-for="user in generalUsers" :key="user.uid">
+              {{ user.userName }}
+            </div>
+          </div>
+        </Transition>
+      </Teleport>
     </div>
 
     <!--Logout Button-->
@@ -59,46 +73,79 @@
 </template>
 
 <script setup lang="ts">
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import SvgComponent from './SvgComponent.vue'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { db } from '../composables/database'
 import 'firebase/firestore'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where, doc, onSnapshot, DocumentData } from 'firebase/firestore'
+import { useCollection, useDocument, useCurrentUser, _RefFirestore } from 'vuefire'
 
-var drawerVisible = ref(true)
+const drawerVisible = ref(true)
+const adminPopupVisible = ref(false)
 
-const auth = getAuth()
-const user = auth.currentUser
+// const props = defineProps<{
+//   user: {type: DocumentData, required: true}
+// }>()
 
-const email = user?.email ? user.email.toUpperCase() : 'EMAIL@STUDENTS.KATYISD.ORG'
-var username = user?.displayName ? user.displayName : 'User Name'
-var isAdmin = false
+const auth = getAuth();
+const user = useCurrentUser();
+const userData = useDocument(() => user.value ? doc(db, "users", user.value.uid) : null);
 
-const adminUsers = ref<string[]>([])
-getDocs(collection(db, 'users')).then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    if (doc.data().admin) {
-      adminUsers.value.push(doc.data().userName)
-      if (user?.uid == doc.id) {
-        isAdmin = true
-      }
-    }
-    if (doc.id == user?.uid) {
-      username = doc.data().userName
-    }
-  })
-})
+
+// const isOnline = ref(false)
+
+const adminUsers = useCollection(query(
+  collection(db, 'users'),
+  where('admin', '==', true)
+));
+
+const generalUsers = useCollection(query(
+  collection(db, 'users'),
+  where('admin', '==', false)
+));
+
+// Listen for auth state changes
+// auth.onAuthStateChanged((user) => {
+//   if (user) {
+//     // User is signed in
+//     console.log('User is signed in ', user.uid);
+//     const userDoc = doc(db, 'users', user.uid);
+//     onSnapshot(userDoc, (docSnap) => {
+//       if (docSnap.exists()) {
+//         isOnline.value = docSnap.data().isOnline;
+//       }
+//     });
+//   } else {
+//     // User is signed out
+//     console.log('User is signed out');
+//     isOnline.value = false;
+//   }
+// });
 
 const router = useRouter()
-const logout = () => {
+const logout = async () => {
+  await auth.signOut()
   router.push('/login')
-  auth.signOut()
 }
+
+// User online status
+
 </script>
 
 <style scoped>
+/* Transitions */
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-active {
+  transition: opacity ease-in .7s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 .outer-nav-button {
   position: absolute;
   left: 0;
@@ -107,6 +154,20 @@ const logout = () => {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.admin-popup {
+  background-color: tomato;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  bottom: 0;
+  margin-bottom: auto;
+  margin-top: auto;
+  left: 350px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
 }
 
 .nav-drawer {
@@ -170,13 +231,12 @@ header {
 }
 
 .inner-nav-button {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    padding-left: 100px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .routes {
@@ -270,8 +330,12 @@ header {
 }
 
 .activity-icon {
-  color: #00ff00;
+  color: rgb(93, 93, 93);
   margin-right: 10px;
+}
+
+.online {
+  color: #00ff00;
 }
 
 .logout-button {

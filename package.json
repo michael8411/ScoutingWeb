@@ -18,12 +18,13 @@
   },
   "dependencies": {
     "@types/firebase": "^3.2.1",
-    "firebase": "^9.18.0",
+    "firebase": "^9.23.0",
     "pinia": "^2.1.7",
     "vue": "^3.2.47",
     "vue-mq": "^1.0.1",
     "vue-router": "^4.0.13",
-    "vue3-google-login": "^2.0.15"
+    "vue3-google-login": "^2.0.15",
+    "vuefire": "^3.1.23"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^4.1.3",
