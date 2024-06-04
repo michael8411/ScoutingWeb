@@ -9,32 +9,36 @@
   import { useRoute } from "vue-router";
   import NavDrawer from "./components/NavDrawer.vue";
   import { getAuth, onAuthStateChanged } from 'firebase/auth'
-  import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-  import { getDatabase, ref, onDisconnect, set } from "firebase/database";
-  import { db, firebaseApp } from "./composables/database";
-import { on } from "events";
+  import { doc, setDoc } from "firebase/firestore";
+  import { db } from "./composables/database";
 
   const route = useRoute();
   const isLoginPage = computed((): boolean => {
     return route.path == '/login'
   });
 
+
+  // TODO: Restrict online changes to admin users
   const auth = getAuth();
   let currentUserId: string | null = null;
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log('User has signed in')
       currentUserId = user.uid;
       setDoc(doc(db, 'users', user.uid), {isOnline: true}, {merge: true});
-
-      const database = getDatabase(firebaseApp);
-      onDisconnect(ref(database, `users/${user.uid}`)).update({isOnline: false});
+      
     } else {
-      console.log('User has signed out')
       if(currentUserId){
         setDoc(doc(db, 'users', currentUserId), { isOnline: false }, { merge: true });
       }
       currentUserId = null;
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && currentUserId) {
+      setDoc(doc(db, 'users', currentUserId), { isOnline: false }, { merge: true });
+    } else if (document.visibilityState === 'visible' && currentUserId) {
+      setDoc(doc(db, 'users', currentUserId), { isOnline: true }, { merge: true });
     }
   });
 
