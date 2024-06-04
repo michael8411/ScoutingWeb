@@ -1,11 +1,11 @@
 <template>
-  <div class="nav-drawer" :style="{ width: drawerVisible ? '300px' : '0' }">
+  <div class="nav-drawer" :style="{ left: drawerVisible ? '0' : '-300px' }">
     <!--Header-->
     <header>
       <img class="circle-logo" src="../assets/images/624_circle_logo.png" alt="Logo" />
       <div class="user-info">
-        <p class="user-email">{{ email }}</p>
-        <p class="user-name">{{ username }}</p>
+        <p class="user-email">{{ userData ? userData.email.toUpperCase() : 'EMAIL@STUDENTS.KATYISD.ORG' }}</p>
+        <p class="user-name">{{ userData ? userData.userName : 'User Name' }}</p>
       </div>
       <button class="inner-nav-button" @click="drawerVisible = false">
         <SvgComponent name="nav-icon" class="nav-icon" />
@@ -29,20 +29,43 @@
       </router-link>
     </div>
 
-    <!--Admin List-->
-    <div class="admin-section">
+    <!--Admin Section-->
+    <div v-if="userData && userData.admin" class="admin-section">
       <div class="admins-header">
         <p class="admins-title">Admins</p>
-        <button class="admin-button">
+        <button class="admin-button" @click="adminPopupVisible = true">
           <SvgComponent name="plus-icon" class="plus-icon" />
         </button>
       </div>
       <div class="line"></div>
+
       <div class="admin-list">
-        <div class="admin-user" v-for="(name, index) in adminUsers" :key="index">
-          <SvgComponent name="activity-indicator" class="activity-icon" />{{ name }}
+        <div class="admin-user" v-for="user in adminUsers" :key="user.uid">
+          <SvgComponent name="activity-indicator" class="activity-icon" :class="{ online: user.isOnline }" />
+          {{user.userName}}
+          <button v-show="userData.id != user.id && drawerVisible && adminPopupVisible" class="admin-remove-button"
+            @click="removeAdmin(user)">
+            <SvgComponent name="plus-icon" class="plus-icon" style="transform: rotate(45deg)" />
+          </button>
         </div>
       </div>
+
+      <Teleport to="body">
+        <Transition name="fade">
+          <div v-show="drawerVisible && adminPopupVisible" class="admin-popup">
+            <button class="admin-popup-close" @click="adminPopupVisible = false">
+              <SvgComponent name="plus-icon" class="plus-icon" style="transform: rotate(45deg)" />
+            </button>
+            <p>Assign Admins</p>
+            <div class="general-user-list">
+              <div class="general-user" v-for="user in generalUsers" :key="user.uid">
+                <p class="general-user-name">{{user.userName}}</p>
+                <button class="admin-assign-button" @click="assignAdmin(user)">Add</button>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </Teleport>
     </div>
 
     <!--Logout Button-->
@@ -65,48 +88,152 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { db } from '../composables/database'
 import 'firebase/firestore'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, query, where, doc, DocumentData, setDoc } from 'firebase/firestore'
+import { useCollection, useDocument, useCurrentUser } from 'vuefire'
 
-var drawerVisible = ref(true)
+const drawerVisible = ref(true)
+const adminPopupVisible = ref(false)
 
-const auth = getAuth()
-const user = auth.currentUser
+const auth = getAuth();
+const user = useCurrentUser();
+const userData = useDocument(() => user.value ? doc(db, "users", user.value.uid) : null);
 
-const email = user?.email ? user.email.toUpperCase() : 'EMAIL@STUDENTS.KATYISD.ORG'
-var username = user?.displayName ? user.displayName : 'User Name'
-var isAdmin = false
+const adminUsers = useCollection(query(
+  collection(db, 'users'),
+  where('admin', '==', true)
+));
 
-const adminUsers = ref<string[]>([])
-getDocs(collection(db, 'users')).then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    if (doc.data().admin) {
-      adminUsers.value.push(doc.data().userName)
-      if (user?.uid == doc.id) {
-        isAdmin = true
-      }
-    }
-    if (doc.id == user?.uid) {
-      username = doc.data().userName
-    }
-  })
-})
+const generalUsers = useCollection(query(
+  collection(db, 'users'),
+  where('admin', '==', false)
+));
 
 const router = useRouter()
-const logout = () => {
+const logout = async () => {
+  await auth.signOut()
   router.push('/login')
-  auth.signOut()
 }
+
+const assignAdmin = (user: DocumentData) => {
+  setDoc(doc(db, 'users', user.id), { admin: true }, { merge: true });
+}
+
+const removeAdmin = (user: DocumentData) => {
+  setDoc(doc(db, 'users', user.id), { admin: false }, { merge: true });
+}
+
 </script>
 
 <style scoped>
+/* Transitions */
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-active {
+  transition: opacity ease-in .7s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .outer-nav-button {
   position: absolute;
-  left: 0;
-  top: 0;
-  padding: 1rem;
+  left: 25px;
+  top: 25px;
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.admin-remove-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 0;
+  margin-left: 5px;
+  animation: tilt-shaking 0.4s infinite;
+}
+
+@keyframes tilt-shaking {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(5deg);
+  }
+
+  50% {
+    transform: rotate(0eg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.admin-popup {
+  background-color: #1f1f1f;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  bottom: 0;
+  margin-bottom: auto;
+  margin-top: auto;
+  left: 325px;
+  width: 175px;
+  height: 225px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.admin-popup-close {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+  position: absolute;
+  top: 5px;
+  right: 0;
+}
+
+.general-user-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.general-user {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.general-user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.admin-assign-button {
+  background-color: #033403;
+  color: #e8e8e8b2;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .nav-drawer {
@@ -121,6 +248,7 @@ const logout = () => {
   transition: all 0.7s ease-in-out;
   height: 100%;
   background-color: black;
+  width: 300px;
 }
 
 header {
@@ -170,13 +298,12 @@ header {
 }
 
 .inner-nav-button {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    padding-left: 100px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .routes {
@@ -198,6 +325,7 @@ header {
   color: white;
   background-color: #131313;
 }
+
 .routes .route-link.router-link-active .icon {
   color: white;
 }
@@ -264,14 +392,20 @@ header {
 }
 
 .admin-user {
+  display: flex;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 90%;
+  align-items: center;
 }
 
 .activity-icon {
-  color: #00ff00;
+  color: rgb(93, 93, 93);
   margin-right: 10px;
+}
+
+.online {
+  color: #00ff00;
 }
 
 .logout-button {

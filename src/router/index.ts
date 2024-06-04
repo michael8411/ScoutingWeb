@@ -4,6 +4,7 @@ import LoginView from '../views/LoginPage.vue';
 import ScoutingView from '../views/ScoutingPage.vue';
 import SheetsView from '../views/SheetsPage.vue';
 import AdminView from '../views/AdminPage.vue';
+import { getCurrentUser } from 'vuefire';
 
 
 const routes = [
@@ -51,17 +52,16 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    const auth = getAuth();
-
-    onAuthStateChanged(auth, (user) => {
-        if (requiresAuth && !user) {
-            next({ path: '/login' });
-        } else {
-            next();
+router.beforeEach(async (to) => {
+    if(to.meta.requiresAuth){
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+            return{
+                path: '/login',
+                query: { redirect: to.fullPath },
+            };
         }
-    });
+    }
 });
 
 export default router;
