@@ -20,7 +20,8 @@ const pinia = createPinia()
 // Create the Vue app
 const app = createApp(App)
 
-// Use Pinia and router
+
+// Use Pinia, router, and VueFire
 app.use(pinia)
 app.use(router)
 app.use(VueFire, {

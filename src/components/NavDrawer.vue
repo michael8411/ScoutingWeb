@@ -159,6 +159,7 @@ async function logout() {
 function toggleDrawer() {
   drawerVisible.value = !drawerVisible.value
 }
+
 </script>
 
 <style scoped>
