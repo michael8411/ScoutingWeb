@@ -1,5 +1,5 @@
 <template>
-  <NavDrawer v-if="!isLoginPage" />
+  <NavDrawer v-if="isProtected" />
   <RouterView />
 
 </template>
@@ -10,8 +10,8 @@
   import NavDrawer from "./components/NavDrawer.vue";
 
   const route = useRoute();
-  const isLoginPage = computed((): boolean => {
-    return route.path == '/login'
+  const isProtected = computed((): boolean => {
+    return route.path != '/login' && route.path != '/reset'
   });
 
 </script>

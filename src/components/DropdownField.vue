@@ -94,15 +94,15 @@ export default defineComponent({
 <style scoped>
 .dynamic-dropdown-wrapper {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   justify-content: bottom;
   width: 100%;
-  gap: 50px;
+  gap: clamp(20px, 4vw, 50px);
 }
 
 .dropdown-label {
-  margin-right: 10px;
-  font-size: 24px;
+  margin-right: clamp(5px, 1vw, 10px);
+  font-size: clamp(16px, 2.5vw, 24px);
   font-weight: bold;
   white-space: nowrap;
 }
@@ -112,37 +112,39 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 }
 
 .dropdown-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: clamp(8px, 1.5vw, 12px);
   background-color: #1e1e1e;
   box-shadow: 0px 4px 4px 0px rgba(43, 43, 43, 0.25);
   color: #fff;
   border-radius: 15px;
   cursor: pointer;
   user-select: none;
-  height: 50px;
-  width: 260px;
+  height: clamp(40px, 6vw, 50px);
+  width: 100%;
 }
 
 .dropdown-selected {
   color: #989898;
   font-family: 'Manrope', sans-serif;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
+
 .dropdown-arrow {
   width: 0;
   height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #989898;
+  border-left: clamp(4px, 0.8vw, 5px) solid transparent;
+  border-right: clamp(4px, 0.8vw, 5px) solid transparent;
+  border-top: clamp(4px, 0.8vw, 5px) solid #989898;
   transition: transform 0.3s;
 }
 
@@ -152,19 +154,20 @@ export default defineComponent({
 
 .dropdown-options {
   position: relative;
-  bottom: 100%; /* Positioned at the bottom edge of the dropdown-container */
+  bottom: 100%;
   left: 0;
   right: 0;
   background-color: #1e1e1e;
   border-radius: 15px;
-  margin-top: 5px; /* Add margin to move it below the container */
+  margin-top: clamp(3px, 0.5vw, 5px);
   padding: 0;
   list-style: none;
   width: 100%;
 }
+
 .dropdown-option {
   position: relative;
-  padding: 10px;
+  padding: clamp(8px, 1.5vw, 12px);
   cursor: pointer;
 }
 
@@ -173,9 +176,10 @@ export default defineComponent({
   border-radius: 15px;
 }
 
-@media screen and (max-width: 600px) {
+
+/* @media screen and (max-width: 600px) {
   .dynamic-dropdown {
     width: 100%;
   }
-}
+} */
 </style>

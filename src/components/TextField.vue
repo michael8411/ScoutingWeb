@@ -169,11 +169,11 @@ export default defineComponent({
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  gap: 10px;
+  gap: clamp(5px, 1vw, 10px);
 }
 
 .textfield-label {
-  font-size: 18px;
+  font-size: clamp(16px, 2vw, 24px);
   font-weight: bold;
   white-space: nowrap;
 }
@@ -188,26 +188,26 @@ export default defineComponent({
 
 .dynamic-textfield input {
   width: 100%;
-  padding: 10px;
+  padding: clamp(8px, 1.5vw, 12px);
   border: 2px solid #989898;
   border-radius: 8px;
-  font-size: 24px;
-  background-color: transparent;;
-  color: #989898 ;
+  font-size: clamp(16px, 2.5vw, 24px);
+  background-color: transparent;
+  color: #989898;
   font-family: 'Manrope', sans-serif;
 }
 
 .maxChar {
   position: absolute;
-  bottom: -20px;
+  bottom: clamp(-20px, -2.5vw, -16px);
   right: 0;
-  font-size: 12px;
+  font-size: clamp(10px, 1.5vw, 12px);
   color: #888;
 }
 
 @media screen and (max-width: 600px) {
   .dynamic-textfield-wrapper {
-    gap: 5px;
+    gap: px;
   }
 
   .textfield-label {
