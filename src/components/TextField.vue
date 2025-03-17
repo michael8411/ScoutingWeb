@@ -1,3 +1,4 @@
+<!-- Textfield.vue -->
 <template>
   <div class="dynamic-textfield-wrapper">
     <label v-if="metadata.label" class="textfield-label">{{ metadata.label }}</label>
@@ -169,12 +170,13 @@ export default defineComponent({
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  max-height: 70px;
   gap: clamp(5px, 1vw, 10px);
 }
 
 .textfield-label {
-  font-size: clamp(16px, 2vw, 24px);
-  font-weight: bold;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 400;
   white-space: nowrap;
 }
 
@@ -191,7 +193,7 @@ export default defineComponent({
   padding: clamp(8px, 1.5vw, 12px);
   border: 2px solid #989898;
   border-radius: 8px;
-  font-size: clamp(16px, 2.5vw, 24px);
+  font-size: clamp(14px, 2vw, 20px);
   background-color: transparent;
   color: #989898;
   font-family: 'Manrope', sans-serif;

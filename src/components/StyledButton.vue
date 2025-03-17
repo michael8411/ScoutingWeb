@@ -1,82 +1,201 @@
 <template>
-  <button :class="['button', btnClass]" :style="computedStyle" @click="handleClick" role="button">
-    {{ label }}
+  <button
+    class="btn"
+    :class="{ 'btn-loading': loading }"
+    :style="computedStyle"
+    @click="handleClick"
+  >
+    <img v-if="icon" :src="icon" :alt="label" class="btn-icon" />
+    <span v-else class="btn-text">
+      <span class="btn-text-inner">{{ loading ? loadingText : label }}</span>
+    </span>
   </button>
 </template>
 
 <script setup lang="ts">
- import { ref, computed } from 'vue';
-const props = defineProps({ label: { type: String, default: 'Button' }, 
-                            btnClass: { type: String, default: '' }, 
-                            btnStyle: { type: Object, default: () => ({}) }, 
-                            onClick: { type: Function, default: null }, });
+import { computed } from 'vue';
 
-const btnStyle = ref(props.btnStyle);
+const props = defineProps({
+  label: {
+    type: String,
+    default: 'Button'
+  },
+  icon: {
+    type: String,
+    default: ''
+  },
+  btnStyle: {
+    type: Object,
+    default: () => ({})
+  },
+  onClick: {
+    type: Function,
+    default: null
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  loadingText: {
+    type: String,
+    default: 'Loading...'
+  }
+});
 
-const handleClick = (event: MouseEvent) => { if (props.onClick) { props.onClick(event); } };
+const handleClick = (event: MouseEvent) => {
+  if (!props.loading && props.onClick) {
+    props.onClick(event);
+  }
+};
 
-const computedStyle = computed(() => { return { '--button-height': '60px' , ...btnStyle.value, }; });
+const computedStyle = computed(() => {
+  return {
+    '--button-height': '70px',
+    ...props.btnStyle
+  };
+});
 </script>
 
-<style>
-:root {
-  --button-height: 52px;
+<style scoped>
+@font-face {
+  font-family: 'Poppins';
+  src: url('@/assets/fonts/Poppins/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
 }
 
-.button {
-  align-items: center;
-  background-color: #009200;
-  border: 2px solid #232b2b;
-  border-radius: 15px;
-  color: #111;
-  cursor: pointer;
-  display: flex;
-  font-size: 24px;
-  height: var(--button-height);
-  justify-content: center;
-  justify-self: center;
-  line-height: 24px;
-  max-width: 100%;
-  padding: 0 25px;
+.btn {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  height: 70px;
+  padding: 16px 46px;
+  margin: auto;
+  font-family: 'Poppins', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  
   text-align: center;
   text-decoration: none;
+  background-color: transparent;
+  border: 2px solid #181c1c;
+  border-radius: 15px;
+  overflow: hidden;
   user-select: none;
   touch-action: manipulation;
-  font-family: 'Manrope', sans-serif;
-  font-weight: bold;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
-.button:after {
-  background-color: #232b2b; /* Possible Culprit */
-  border-radius: 15px;
-  content: ''; /* Possible Culprit */
-  display: block;
-  height: var(--button-height);
-  left: -1px;
-  width: 100%;
+
+.btn:hover {
+  box-shadow: 1px 1px 25px 10px rgba(22, 22, 22, 0.4);
+  outline: 0;
+  background-color: #000000;
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  background-color: #000000;
+  transform: translateY(0);
+}
+
+.btn::before {
+  content: '';
   position: absolute;
-  top: -3px;
-  transform: translate(8px, 8px);
-  transition: transform 0.2s ease-out; /* Possible Culprit */
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(167, 165, 165, 0.664), transparent);
+  transition: left 0.65s ease;
   z-index: -1;
 }
 
-.button:hover:after {
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -1px;
+  width: 100%;
+  height: 70px;
+  background-color: transparent;
+  border-radius: 15px;
+  transform: translate(-1px, -5px);
+  transition: transform 0.2s ease-out;
+  z-index: -1;
+}
+
+.btn:hover::after {
   transform: translate(0, 0);
 }
 
-.button:active {
-  background-color: var(--accentBg);
-  outline: 0;
+.btn-text {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: normal;
+  letter-spacing: 0.05em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.button:hover {
-  outline: 0;
+.btn-text-inner {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(to right, #302f2f, #c4c4c4 50%, #d1d1d1 50%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  background-position: 100%;
+  transition: background-position 0.7s ease;
 }
 
-@media (min-width: 768px) {
-  .button {
-    padding: 0 40px;
-  }
+.btn:hover .btn-text-inner {
+  background-position: 0 100%;
+}
+
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.btn-icon {
+  width: auto;
+  height: 50px;
+  max-width: 100%;
+  object-fit: contain;
+  
+}
+
+.xs .btn {
+  font-size: 20px;
+  padding: 12px 32px;
+}
+
+.sm .btn {
+  font-size: 20px;
+  padding: 14px 40px;
+}
+
+.md .btn {
+  font-size: 20px;
+  padding: 16px 46px;
+}
+
+.lg .btn,
+.xl .btn,
+.xxl .btn {
+  font-size: 26px;
+  padding: 18px 52px;
 }
 </style>

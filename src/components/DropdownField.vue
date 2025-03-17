@@ -94,16 +94,17 @@ export default defineComponent({
 <style scoped>
 .dynamic-dropdown-wrapper {
   display: flex;
+  flex-direction: column;
   align-items: baseline;
   justify-content: bottom;
   width: 100%;
-  gap: clamp(20px, 4vw, 50px);
+  gap: clamp(5px, 1vw, 10px);
+  height: 75px;
 }
 
 .dropdown-label {
-  margin-right: clamp(5px, 1vw, 10px);
-  font-size: clamp(16px, 2.5vw, 24px);
-  font-weight: bold;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 400;
   white-space: nowrap;
 }
 
@@ -133,7 +134,7 @@ export default defineComponent({
 .dropdown-selected {
   color: #989898;
   font-family: 'Manrope', sans-serif;
-  font-size: clamp(16px, 2vw, 20px);
+  font-size: clamp(16px, 1.65vw, 20px);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -177,9 +178,5 @@ export default defineComponent({
 }
 
 
-/* @media screen and (max-width: 600px) {
-  .dynamic-dropdown {
-    width: 100%;
-  }
-} */
+
 </style>

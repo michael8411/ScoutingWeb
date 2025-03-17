@@ -1,106 +1,87 @@
-This workspace is a Vue 3 project called "ScoutingWeb" that serves as a template to help developers get started with Vue 3 in Vite. It provides a foundation for developing a web application for scouting purposes.
+# Scouting Webapp
 
-### Project Overview:
+**Table of Contents**
+- [Scouting Webapp](#scouting-webapp)
+  - [Project Overview](#project-overview)
+  - [Project Goal](#project-goal)
+  - [Key Instructions \& Features](#key-instructions--features)
+    - [Analyzing the Existing React Component](#analyzing-the-existing-react-component)
+    - [Designing the Vue.js Button Component](#designing-the-vuejs-button-component)
+    - [Migrating Visual Styling](#migrating-visual-styling)
+    - [Incorporating Animations with Oku Motion](#incorporating-animations-with-oku-motion)
+    - [Testing Component Functionality](#testing-component-functionality)
+    - [Documenting the Migration](#documenting-the-migration)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
 
-- **Type of Project**: Web application
-- **Purpose**: The project aims to provide a starting point for developers to build a web application using Vue 3 in Vite, tailored for scouting activities.
-- **Main Technologies**:
-  - **Vue 3**: Frontend framework for building user interfaces.
-  - **Vite**: Build tool that focuses on speed and simplicity.
-  - **Firebase**: Backend service for authentication and data storage.
-  - **Playwright**: End-to-end testing tool.
-- **Languages**: JavaScript, TypeScript
+---
 
-### Project Structure:
+## Project Overview
+This repository contains the **Scouting Webapp**, a Vue.js 3 application focused on providing a modular and reusable design system for various UI components. Originally, core components (like the `Button`) were implemented in React using **Framer Motion** for animations. The major objective is to migrate these components to Vue.js 3, leveraging **Oku Motion** for motion effects.
 
-- **Root Directory**:
-  - Contains configuration files like `.eslintrc.cjs`, `.firebaserc`, `.gitignore`, `README.md`, etc.
-- **`e2e` Directory**:
-  - Contains end-to-end testing configurations and test files.
-- **`functions` Directory**:
-  - Contains Firebase Cloud Functions configurations and source code.
-- **`src` Directory**:
-  - Contains the main source code for the Vue application.
-  - Organized into subdirectories for components, composables, data, router, state management, store, styling, utils, and views.
-- **`package.json`**:
-  - Defines scripts for building, testing, linting, and running the project.
-  - Lists dependencies and devDependencies required for the project.
+Key points include:
+- Maintaining or improving upon existing functionality.
+- Preserving consistent UI/UX.
+- Utilizing the Vue Composition API for cleaner, more efficient code.
+- Ensuring the migration avoids performance pitfalls.
 
-### Key Features:
+---
 
-- **Recommended IDE Setup**: Suggests using VSCode with Volar for Vue 3 development.
-- **Project Setup**: Instructions for installing project dependencies.
-- **Development Scripts**:
-  - `npm run dev`: Compiles and hot-reloads for development.
-  - `npm run build`: Type-checks, compiles, and minifies for production.
-  - `npm run test:unit`: Runs unit tests with Vitest.
-  - `npm run test:e2e`: Runs end-to-end tests with Playwright.
-  - `npm run lint`: Lints the codebase with ESLint.
-- **Customize Configuration**: Provides a reference for Vite configuration.
-- **Type Support for `.vue` Imports in TS**: Explains how to handle type information for `.vue` imports in TypeScript.
+## Project Goal
+- **Primary Objective:** Migrate a reusable button component from **React** (with Framer Motion) to **Vue.js 3**, incorporating **Oku Motion** for animation.
+- **Secondary Objectives:**
+  - Adhere to Vue.js best practices.
+  - Preserve or enhance the original look, feel, and interactivity.
+  - Maintain or improve performance and responsiveness.
 
-In summary, "ScoutingWeb" is a Vue 3 project scaffolded with
+---
 
-# The user is viewing line 23 of the Field 'router-link.route-link'
+## Key Instructions & Features
 
-of the d:\WebScouting2024\ScoutingWeb\src\components\NavDrawer.vue file, which is in the vue language.
+### Analyzing the Existing React Component
+1. **Review the React codebase** for the button component.
+2. **Document** all props, events, styling hooks, and motion properties.
+3. **Identify** how Framer Motion is used, including transitions, keyframes, and gesture-based animations.
 
-```
-23: <router-link to="/admin" class="route-link">
-24:                 <SvgComponent name="admin-icon" class="icon" />
-25:                 Admin
-26:             </router-link>
-```
+### Designing the Vue.js Button Component
+1. **Composition API:** Write the logic in `setup()` functions for reactivity and to avoid large monolithic options blocks.
+2. **Props and Events:** Replicate the React component’s props and events (e.g., `onClick`) in a Vue-friendly way (`@click` or `emit()`).
+3. **Compatibility:** Ensure the new component integrates well with the rest of the Vue.js 3 application.
 
-# The user is on a Windows machine.
+### Migrating Visual Styling
+1. **CSS/SCSS**: Transfer the button’s styling, ensuring **scoped** styles where appropriate (to avoid naming collisions).
+2. **Responsive Design**: Preserve breakpoints and layout structure from the original button design.
+3. **CSS Variables or Utility Classes**: Consider extracting repeated styling patterns into global variables or utility classes.
 
-# The last command and its output in the terminal is: `
+### Incorporating Animations with Oku Motion
+1. **Oku Motion Basics**: Install and configure **Oku Motion** to replicate or improve Framer Motion’s animations.
+2. **Replace Motion Logic**: Migrate `FramerMotion` directives to `OkuMotion` equivalents.
+3. **Test**: Ensure transitions and gestures produce the same or better effects when triggered by user interactions (hover, click, focus).
 
-PS D:\WebScouting2024\ScoutingWeb> npm run dev
+### Testing Component Functionality
+1. **Unit Tests**: Validate that the button’s props, events, and animations behave as expected.
+2. **Integration Tests**: Render the button in a parent component or a test page to confirm seamless integration.
+3. **Cross-Browser Compatibility**: Check that all animations and interactions work correctly on modern browsers (Chrome, Firefox, Safari, Edge).
 
-> scoutingweb@0.0.0 dev
-> vite
+### Documenting the Migration
+1. **Usage Instructions**: How to import and use the new Vue-based button.
+2. **API/Props**: Outline each prop, default values, and events.
+3. **Comparison Report** (optional): Summarize differences between React + Framer Motion vs Vue + Oku Motion implementations.
+4. **Performance Findings**: Note any improvements or special considerations discovered during testing.
 
-✔ Console Ninja extension is connected to Vite, see https://tin
+---
 
-VITE v4.5.3 ready in 1887 ms
+## Getting Started
 
-➜ Local: http://localhost:5173/comment-scouting-2023/  
- ➜ Network: use --host to expose
-➜ press h to show help
-11:53:03 AM [vite] page reload src/main.ts
-11:53:04 AM [vite] page reload src/main.ts (x2)
-11:53:06 AM [vite] page reload src/main.ts (x3)
-11:53:28 AM [vite] page reload src/main.ts (x4)
-11:53:29 AM [vite] page reload src/main.ts (x5)
-11:55:07 AM [vite] hmr update /src/views/ScoutingPage.vue  
-11:55:18 AM [vite] hmr update /src/views/ScoutingPage.vue (x2)
-11:56:21 AM [vite] hmr update /src/views/ScoutingPage.vue (x3)
-11:56:22 AM [vite] hmr update /src/views/ScoutingPage.vue (x4)
-11:56:26 AM [vite] hmr update /src/views/ScoutingPage.vue (x5)
-11:56:31 AM [vite] hmr update /src/views/ScoutingPage.vue (x6)
-11:56:34 AM [vite] hmr update /src/views/ScoutingPage.vue (x7)
-11:56:42 AM [vite] hmr update /src/views/ScoutingPage.vue (x8)
-11:56:49 AM [vite] hmr update /src/views/ScoutingPage.vue (x9)
-12:03:48 PM [vite] hmr update /src/views/ScoutingPage.vue (x10)12:05:16 PM [vite] hmr update /src/App.vue
-12:05:21 PM [vite] hmr update /src/App.vue (x2)
-12:05:24 PM [vite] hmr update /src/App.vue (x3)
-12:06:01 PM [vite] hmr update /src/App.vue (x4)
-[@vue/compiler-sfc] `defineProps` is a compiler macro and no longer needs to be imported.
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v14+ recommended)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/) (latest stable version)
+- A **Vue.js 3** environment already set up (CLI-based or Vite-based)
+- Basic knowledge of TypeScript (if applicable to your codebase)
 
-12:06:43 PM [vite] page reload src/main.ts
-12:06:49 PM [vite] page reload src/main.ts (x2)
-12:06:54 PM [vite] page reload src/main.ts (x3)
-12:08:21 PM [vite] page reload src/main.ts (x4)
-12:08:25 PM [vite] page reload src/main.ts (x5)
-12:09:23 PM [vite] page reload src/main.ts (x6)
-12:10:38 PM [vite] hmr update /src/components/NavDrawer.vue  
-12:10:42 PM [vite] hmr update /src/components/NavDrawer.vue (x2)
-12:11:54 PM [vite] hmr update /src/views/AdminPage.vue, /src/components/DropdownField.vue
-12:12:02 PM [vite] hmr update /src/views/AdminPage.vue, /src/components/DropdownField.vue (x2)
-12:
-`
-
-# The current project is a git repository on branch: master
-
-# The following files have been changed since the last commit: package-lock.json,package.json,src/App.vue,src/components/DropdownField.vue,src/components/NavDrawer.vue,src/components/StyledButton.vue,src/composables/useAuth.ts,src/main.ts,src/views/AdminPage.vue,src/views/LoginPage.vue,src/views/ScoutingPage.vue,src/views/SheetsPage.vue,tsconfig.app.json
+### Installation
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/YourUsername/scouting-webapp.git
+   cd scouting-webapp

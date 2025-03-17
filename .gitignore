@@ -27,5 +27,8 @@ coverage
 *.sln
 *.sw?
 
+.env
+.env.local
+
 test-results/
 playwright-report/

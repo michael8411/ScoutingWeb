@@ -1,31 +1,28 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore';
-import { enableIndexedDbPersistence } from "firebase/firestore";
+// database.ts 
 
-const firebaseConfig = {
-    apiKey: "AIzaSyD4XGhmHwisYjhrIVoGsOh1tvAQ75bsg8U",
-    authDomain: "scouting-web-app-2023.firebaseapp.com",
-    projectId: "scouting-web-app-2023",
-    storageBucket: "scouting-web-app-2023.appspot.com",
-    messagingSenderId: "360081015403",
-    appId: "1:360081015403:web:92f78f843f4315e272272e",
-    measurementId: "G-048BY8QV6D"
-};
+import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { getAnalytics } from 'firebase/analytics'
+import { getFirestore, persistentLocalCache, initializeFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
-const firebase = initializeApp(firebaseConfig);
-const db = getFirestore(firebase);
+const firebaseConfig: FirebaseOptions = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string,
+  authDomain: 'scouting-webapp-eb64e.firebaseapp.com',
+  projectId: 'scouting-webapp-eb64e',
+  storageBucket: 'scouting-webapp-eb64e.appspot.com',
+  messagingSenderId: '2996373214',
+  appId: '1:2996373214:web:b077b4312aa9b78c89e44f',
+  measurementId: 'G-9FHW5J9K04'
+}
 
-enableIndexedDbPersistence(db)
-    .catch((err) => {
-        if (err.code == 'failed-precondition') {
-            // Multiple tabs open, persistence can only be enabled
-            // in one tab at a a time.
-            // ...
-        } else if (err.code == 'unimplemented') {
-            // The current browser does not support all of the
-            // features required to enable persistence
-            // ...
-        }
-});
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig)
+const analytics = getAnalytics(firebaseApp)
+const auth = getAuth(firebaseApp)
 
-export { db }
+// Initialize Firestore with offline persistence using `localCache`
+const db = initializeFirestore(firebaseApp, {
+  localCache: persistentLocalCache()
+})
+
+export { db, firebaseApp, auth, analytics }
