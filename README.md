@@ -1,6 +1,6 @@
 # 2023 Dynamic Layout Scouting App
 
-This repository contains **Team 624’s 2023 Scouting Web App**, a Vue 3 and TypeScript project that showcases **modular component management**, **real-time syncing**, and **Firebase** integration. The goal is to allow an administrator to dynamically add, remove, and rearrange UI components—without redeploying the site—so that non-admin users see layout changes instantly. This approach is designed to streamline **FRC scouting** while demonstrating an advanced web architecture.
+This repository contains **Team 624’s 2023 Scouting Web App**, a Vue 3 and TypeScript project that showcases **modular component management**, **real-time syncing**, and **Firebase** integration. The goal is to allow an administrator to dynamically add, remove, and rearrange UI components without redeploying the site so that non-admin users see layout changes instantly. This approach is designed to streamline **FRC scouting** while demonstrating an advanced web architecture.
 
 ---
 
@@ -279,7 +279,7 @@ Please ensure your code follows the existing style guidelines, passes all lint c
 
 # License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use and adapt it for your own **FRC** or other dynamic forms/scouting needs. We’d love to see any improvements you make—please consider contributing back!
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use and adapt it for your own **FRC** or other dynamic forms/scouting needs. We’d love to see any improvements you make please consider contributing back!
 
 ---
 
